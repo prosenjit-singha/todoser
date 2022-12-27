@@ -42,6 +42,7 @@ function RegForm() {
       elevation={3}
       sx={({ shadows }) => ({
         p: 2,
+        pb: 3,
         m: [0, 2, 3],
         minWidth: "min(100%, 350px)",
         boxShadow: ["none", shadows[5]],
@@ -53,6 +54,7 @@ function RegForm() {
       <Stack spacing={2} mt={3}>
         <TextField
           name="fullName"
+          value={values.fullName}
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.fullName && !!touched.fullName}
@@ -71,6 +73,7 @@ function RegForm() {
           name="email"
           onChange={handleChange}
           onBlur={handleBlur}
+          value={values.email}
           error={!!errors.email && !!touched.email}
           helperText={
             !!errors.email && !!touched.email ? errors.email : undefined
@@ -85,6 +88,7 @@ function RegForm() {
           name="password"
           onChange={handleChange}
           onBlur={handleBlur}
+          value={values.password}
           error={!!errors.password && !!touched.password}
           helperText={
             !!errors.password && !!touched.password
@@ -114,6 +118,7 @@ function RegForm() {
           name="confirmPassword"
           onChange={handleChange}
           onBlur={handleBlur}
+          value={values.confirmPassword}
           error={!!errors.confirmPassword && !!touched.confirmPassword}
           helperText={
             !!errors.confirmPassword && !!touched.confirmPassword
