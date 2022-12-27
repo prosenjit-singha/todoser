@@ -8,26 +8,29 @@ type PropsType = {
 };
 
 type ValueType = {
+  mode: "dark" | "light";
   theme: Theme;
   toggleTheme: () => void;
 };
 
 const ThemeTogglerContext = createContext<ValueType>({
+  mode: "dark",
   theme: darkMode,
   toggleTheme: () => {},
 });
 
 export const ThemeTogglerProvider = ({ children }: PropsType) => {
-  const [theme, setTheme] = useState(darkMode);
+  const [mode, setMode] = useState<"dark" | "light">("dark");
+
+  const theme = mode === "dark" ? darkMode : lightMode;
 
   function toggleTheme(callback?: () => void) {
-    if (theme.palette.mode === "dark") setTheme(lightMode);
-    else setTheme(darkMode);
+    setMode((prev) => (prev === "dark" ? "light" : "dark"));
     if (typeof callback === "function") callback();
   }
 
   return (
-    <ThemeTogglerContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeTogglerContext.Provider value={{ mode, theme, toggleTheme }}>
       {""}
       {children}
       {""}

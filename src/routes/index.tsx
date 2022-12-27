@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "../layouts/Root";
 import AddTask from "../pages/AddTask";
 import CompletedTasks from "../pages/CompletedTasks";
@@ -11,6 +11,10 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <AddTask />,
+      },
+      {
+        path: "/add-task",
+        loader: () => redirect("/"),
       },
       {
         path: "my-tasks",
