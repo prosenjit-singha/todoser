@@ -2,7 +2,7 @@ import { ThemeOptions } from "@mui/material";
 
 export const commonStyles: ThemeOptions = {
   shape: {
-    borderRadius: 0,
+    borderRadius: 8,
   },
   components: {
     MuiButtonBase: {

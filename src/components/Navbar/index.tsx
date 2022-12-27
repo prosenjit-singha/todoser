@@ -53,7 +53,9 @@ function Navbar() {
         </Stack>
         {/* Login / Register  */}
         <Stack direction="row" spacing={2} mr={1} alignItems="center">
-          <Navlink to="/login">Login</Navlink>
+          <Navlink sx={{ display: ["none", "inline"] }} to="/login">
+            Login
+          </Navlink>
           <Button component={Link} to="/register" variant="outlined">
             Register
           </Button>

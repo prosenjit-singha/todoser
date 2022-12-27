@@ -20,7 +20,12 @@ function RegForm() {
   return (
     <Paper
       elevation={3}
-      sx={{ p: 2, m: [0, 2, 3], minWidth: "min(100%, 350px)" }}
+      sx={({ shadows }) => ({
+        p: 2,
+        m: [0, 2, 3],
+        minWidth: "min(100%, 350px)",
+        boxShadow: ["none", shadows[5]],
+      })}
     >
       <Typography component="h1" variant="h4" textAlign="center" gutterBottom>
         Register

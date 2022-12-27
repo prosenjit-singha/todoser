@@ -11,7 +11,7 @@ function Register() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "calc(100vh - 50px)",
+          minHeight: ["calc(100vh - 56px)", "calc(100vh - 64px)"],
         }}
       >
         <RegForm />
