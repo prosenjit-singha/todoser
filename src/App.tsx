@@ -1,7 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 import { ThemeProvider, CssBaseline, GlobalStyles } from "@mui/material";
 import { router } from "./routes";
-import { darkMode, lightMode } from "./contexts/ThemeToggler/theme";
 import { useThemeToggler } from "./contexts/ThemeToggler";
 import globalStyles from "./styles/global.styles";
 import TasksProvider from "./contexts/TasksProvider";

@@ -1,10 +1,11 @@
 import { createContext, useContext, useState } from "react";
 
 type TaskType = {
+  isCompleted: boolean;
   title: string;
   desc: string;
   label: string[];
-  image: string[];
+  imageURL: string;
 };
 
 type ValueType = {
@@ -30,7 +31,7 @@ const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       prev.map((task, i) => (i === index ? updatedTask : task))
     );
   }
-
+  console.info(tasks);
   const value: ValueType = {
     tasks,
     addTask,
