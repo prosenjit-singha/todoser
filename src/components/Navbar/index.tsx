@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -13,11 +14,19 @@ import {
   MdOutlineDarkMode as DarkModeIcon,
   MdOutlineLightMode as LightModeIcon,
 } from "react-icons/md";
+import { RxHamburgerMenu as MenuIcon } from "react-icons/rx";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
+import NavDrawer from "./NavDrawer";
 
 function Navbar() {
+  const [openMenu, setOpenMenu] = useState(false);
   const { pathname } = useLocation();
   const { mode, theme, toggleTheme } = useThemeToggler();
+
+  function toggleOpenMenu() {
+    setOpenMenu((prev) => !prev);
+  }
+
   function isActive(link: string) {
     return pathname === link ? "active" : undefined;
   }
@@ -29,7 +38,13 @@ function Navbar() {
     >
       <Toolbar>
         <Logo />
-        <Stack direction="row" ml="auto" spacing={2} mr={1}>
+        <Stack
+          direction="row"
+          ml="auto"
+          spacing={2}
+          mr={1}
+          sx={{ display: ["none", "flex"] }}
+        >
           {navlinks.map((link, i) => (
             <Navlink active={isActive(link.path)} key={i} to={link.path}>
               {link.name}
@@ -40,7 +55,12 @@ function Navbar() {
         <IconButton onClick={toggleTheme}>
           {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
+        {/* Toggle Menu */}
+        <IconButton onClick={toggleOpenMenu}>
+          <MenuIcon />
+        </IconButton>
       </Toolbar>
+      <NavDrawer open={openMenu} onClose={toggleOpenMenu} />
     </AppBar>
   );
 }

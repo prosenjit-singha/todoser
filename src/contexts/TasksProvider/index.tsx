@@ -1,12 +1,5 @@
 import { createContext, useContext, useState } from "react";
-
-type TaskType = {
-  isCompleted: boolean;
-  title: string;
-  desc: string;
-  label: string[];
-  imageURL: string;
-};
+import TaskType from "../../types/task.type";
 
 type ValueType = {
   tasks: TaskType[];
@@ -20,7 +13,7 @@ const TasksContext = createContext<ValueType>({} as ValueType);
 const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
   function addTask(task: TaskType) {
-    setTasks([...tasks, task]);
+    setTasks([task, ...tasks]);
   }
   function deleteTask(index: number) {
     setTasks((prev) => prev.filter((_, i) => i !== index));
@@ -31,7 +24,7 @@ const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       prev.map((task, i) => (i === index ? updatedTask : task))
     );
   }
-  console.info(tasks);
+
   const value: ValueType = {
     tasks,
     addTask,

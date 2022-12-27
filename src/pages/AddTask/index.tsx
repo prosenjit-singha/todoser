@@ -8,13 +8,10 @@ function AddTask() {
   const { tasks } = useTasks();
   return (
     <Main>
-      <Stack mt={3} mx={4}>
-        AddTask
-      </Stack>
       <List>
         <AddForm />
         {tasks.map((task, i) => (
-          <TaskItem key={i} />
+          <TaskItem key={i} task={task} />
         ))}
       </List>
     </Main>
