@@ -7,8 +7,8 @@ import {
   Button,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
-import { FcGoogle } from "react-icons/fc";
 import {
   MdOutlineVisibility as VisibilityIcon,
   MdOutlineVisibilityOff as VisibilityOffIcon,
@@ -16,6 +16,7 @@ import {
 import OrDivider from "./OrDivider";
 import { useFormik, FormikHelpers } from "formik";
 import loginFormSchema from "../../schemas/loginForm.schema";
+import LogInWithGoogleButton from "../../components/LogInWithGoogleButton";
 
 const initialValues = {
   email: "",
@@ -24,12 +25,20 @@ const initialValues = {
 
 function RegForm() {
   const [showPass, setShowPass] = useState(false);
-  const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
-    useFormik({
-      initialValues,
-      onSubmit,
-      validationSchema: loginFormSchema,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isSubmitting,
+    setSubmitting,
+  } = useFormik({
+    initialValues,
+    onSubmit,
+    validationSchema: loginFormSchema,
+  });
 
   function onSubmit(
     v: typeof initialValues,
@@ -95,14 +104,23 @@ function RegForm() {
             ),
           }}
         />
-        <Button type="submit" variant="outlined">
-          Log In
+        <Button
+          disabled={isSubmitting}
+          type="button"
+          onClick={() => setSubmitting(!isSubmitting)}
+          variant="outlined"
+        >
+          {isSubmitting ? (
+            <CircularProgress color="inherit" size="1.75em" />
+          ) : (
+            "Log In"
+          )}
         </Button>
         <OrDivider />
-        <Button variant="outlined" startIcon={<FcGoogle />}>
-          {" "}
-          Log In With Google{" "}
-        </Button>
+        <LogInWithGoogleButton
+          isSubmitting={isSubmitting}
+          setSubmitting={setSubmitting}
+        />
       </Stack>
     </Paper>
   );

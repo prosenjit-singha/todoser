@@ -21,9 +21,9 @@ type ValueType = {
   logInWithGoogle: () => Promise<UserCredential>;
 };
 
-const AuthContext = createContext({});
+const AuthContext = createContext({} as ValueType);
 
-function AuthContextProvider({ children }: { children: React.ReactNode }) {
+function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -50,6 +50,6 @@ function AuthContextProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export default AuthContextProvider;
+export default AuthProvider;
 
 export const useAuth = () => useContext(AuthContext);
