@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "../layouts/Root";
 import AddTask from "../pages/AddTask";
 import CompletedTasks from "../pages/CompletedTasks";
+import Login from "../pages/Login";
 import MyTasks from "../pages/MyTasks";
 import Register from "../pages/Register";
 export const router = createBrowserRouter([
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: "completed-tasks",
         element: <CompletedTasks />,
+      },
+      {
+        path: "login",
+        element: <Login />,
       },
       {
         path: "register",
