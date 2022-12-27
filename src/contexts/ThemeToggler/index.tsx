@@ -1,30 +1,38 @@
+import { useState } from "react";
+import { createContext, useContext } from "react";
 import { Theme } from "@mui/material";
-import { createContext, useContext, useState } from "react";
-import { darkMode } from "./darkMode";
-import { lightMode } from "./lightMode";
+import { darkMode, lightMode } from "./theme";
+
+type PropsType = {
+  children: React.ReactNode;
+};
 
 type ValueType = {
   theme: Theme;
-  mode: "light" | "dark";
   toggleTheme: () => void;
 };
 
-const ThemeTogglerContext = createContext({} as ValueType);
+const ThemeTogglerContext = createContext<ValueType>({
+  theme: darkMode,
+  toggleTheme: () => {},
+});
 
-const ThemeTogglerProvider = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<"light" | "dark">("dark");
-  const theme = mode === "dark" ? darkMode : lightMode;
+export const ThemeTogglerProvider = ({ children }: PropsType) => {
+  const [theme, setTheme] = useState(darkMode);
 
-  function toggleTheme() {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
+  function toggleTheme(callback?: () => void) {
+    if (theme.palette.mode === "dark") setTheme(lightMode);
+    else setTheme(darkMode);
+    if (typeof callback === "function") callback();
   }
+
   return (
-    <ThemeTogglerContext.Provider value={{ theme, mode, toggleTheme }}>
+    <ThemeTogglerContext.Provider value={{ theme, toggleTheme }}>
+      {""}
       {children}
+      {""}
     </ThemeTogglerContext.Provider>
   );
 };
-
-export default ThemeTogglerProvider;
 
 export const useThemeToggler = () => useContext(ThemeTogglerContext);
