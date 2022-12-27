@@ -4,6 +4,7 @@ import { router } from "./routes";
 import { darkMode, lightMode } from "./contexts/ThemeToggler/theme";
 import { useThemeToggler } from "./contexts/ThemeToggler";
 import globalStyles from "./styles/global.styles";
+import TasksProvider from "./contexts/TasksProvider";
 
 function App() {
   const { theme } = useThemeToggler();
@@ -11,7 +12,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
       <GlobalStyles styles={(p) => globalStyles(p)} />
-      <RouterProvider router={router} />
+      <TasksProvider>
+        <RouterProvider router={router} />
+      </TasksProvider>
     </ThemeProvider>
   );
 }
