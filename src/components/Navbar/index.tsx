@@ -6,6 +6,7 @@ import {
   styled,
   IconButton,
   lighten,
+  Button,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import navlinks from "../../data/navlinks";
@@ -37,19 +38,25 @@ function Navbar() {
       }}
     >
       <Toolbar>
-        <Logo />
+        <Logo sx={{ mr: "auto" }} />
         <Stack
           direction="row"
-          ml="auto"
           spacing={2}
-          mr={1}
-          sx={{ display: ["none", "flex"] }}
+          mr={3}
+          sx={{ display: ["none", "none", "flex"] }}
         >
           {navlinks.map((link, i) => (
             <Navlink active={isActive(link.path)} key={i} to={link.path}>
               {link.name}
             </Navlink>
           ))}
+        </Stack>
+        {/* Login / Register  */}
+        <Stack direction="row" spacing={2} mr={1} alignItems="center">
+          <Navlink to="/login">Login</Navlink>
+          <Button component={Link} to="/register" variant="outlined">
+            Register
+          </Button>
         </Stack>
         {/* Toggle Theme Button */}
         <IconButton onClick={toggleTheme}>

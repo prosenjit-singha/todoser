@@ -3,6 +3,7 @@ import Root from "../layouts/Root";
 import AddTask from "../pages/AddTask";
 import CompletedTasks from "../pages/CompletedTasks";
 import MyTasks from "../pages/MyTasks";
+import Register from "../pages/Register";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "completed-tasks",
         element: <CompletedTasks />,
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
     ],
   },
