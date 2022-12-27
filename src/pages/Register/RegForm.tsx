@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Paper,
   Typography,
@@ -7,8 +8,8 @@ import {
   Button,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
-import { FcGoogle } from "react-icons/fc";
 import {
   MdOutlineVisibility as VisibilityIcon,
   MdOutlineVisibilityOff as VisibilityOffIcon,
@@ -16,6 +17,10 @@ import {
 import OrDivider from "./OrDivider";
 import { useFormik, FormikHelpers } from "formik";
 import registerFormSchema from "../../schemas/registerForm.schema";
+import LogInWithGoogleButton from "../../components/LogInWithGoogleButton";
+import { useAuth } from "../../contexts/AuthContext";
+import { updateProfile } from "firebase/auth";
+import AuthAlert from "../../components/AuthAlert";
 
 const initialValues = {
   fullName: "",
@@ -26,19 +31,47 @@ const initialValues = {
 
 function RegForm() {
   const [showPass, setShowPass] = useState(false);
-  const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
-    useFormik({
-      initialValues,
-      onSubmit,
-      validationSchema: registerFormSchema,
-    });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  const {
+    values,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    errors,
+    touched,
+    isSubmitting,
+    setSubmitting,
+  } = useFormik({
+    initialValues,
+    onSubmit,
+    validationSchema: registerFormSchema,
+  });
 
-  function onSubmit(
+  async function onSubmit(
     v: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
-  ) {}
+  ) {
+    setIsLoading(true);
+    try {
+      const { user } = await register({ email: v.email, password: v.password });
+      await updateProfile(user, { displayName: v.fullName });
+      actions.resetForm();
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      if (err.code === "auth/email-already-in-use")
+        setErrorText("Email already in use");
+      else setErrorText("Registration Failed");
+    } finally {
+      setIsLoading(false);
+    }
+  }
   return (
     <Paper
+      component="form"
+      onSubmit={handleSubmit}
       elevation={3}
       sx={({ shadows }) => ({
         p: 2,
@@ -51,6 +84,7 @@ function RegForm() {
       <Typography component="h1" variant="h4" textAlign="center" gutterBottom>
         Register
       </Typography>
+      <AuthAlert text={errorText} setText={setErrorText} />
       <Stack spacing={2} mt={3}>
         <TextField
           name="fullName"
@@ -107,6 +141,7 @@ function RegForm() {
                   onClick={() => setShowPass(!showPass)}
                   aria-label="toggle password visibility"
                   edge="end"
+                  sx={{ color: "text.secondary" }}
                 >
                   {showPass ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </IconButton>
@@ -137,6 +172,7 @@ function RegForm() {
                   onClick={() => setShowPass(!showPass)}
                   aria-label="toggle password visibility"
                   edge="end"
+                  sx={{ color: "text.secondary" }}
                 >
                   {showPass ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </IconButton>
@@ -144,14 +180,19 @@ function RegForm() {
             ),
           }}
         />
-        <Button type="submit" variant="outlined">
-          Register
+        <Button disabled={isSubmitting} type="submit" variant="outlined">
+          {isLoading ? (
+            <CircularProgress color="inherit" size="1.75em" />
+          ) : (
+            "Register"
+          )}
         </Button>
         <OrDivider />
-        <Button variant="outlined" startIcon={<FcGoogle />}>
-          {" "}
-          Register With Google{" "}
-        </Button>
+        <LogInWithGoogleButton
+          isSubmitting={isSubmitting}
+          setSubmitting={setSubmitting}
+          label="Register With Google"
+        />
       </Stack>
     </Paper>
   );

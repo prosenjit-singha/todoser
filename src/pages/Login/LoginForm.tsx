@@ -17,6 +17,9 @@ import OrDivider from "./OrDivider";
 import { useFormik, FormikHelpers } from "formik";
 import loginFormSchema from "../../schemas/loginForm.schema";
 import LogInWithGoogleButton from "../../components/LogInWithGoogleButton";
+import AuthAlert from "../../components/AuthAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const initialValues = {
   email: "",
@@ -25,6 +28,10 @@ const initialValues = {
 
 function RegForm() {
   const [showPass, setShowPass] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState("Error");
+  const navigate = useNavigate();
+  const { logIn } = useAuth();
   const {
     values,
     errors,
@@ -40,12 +47,24 @@ function RegForm() {
     validationSchema: loginFormSchema,
   });
 
-  function onSubmit(
+  async function onSubmit(
     v: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
-  ) {}
+  ) {
+    try {
+      await logIn({ email: v.email, password: v.password });
+      actions.resetForm();
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.info(err);
+    } finally {
+      setIsLoading(!isLoading);
+    }
+  }
   return (
     <Paper
+      component="form"
+      onSubmit={handleSubmit}
       elevation={3}
       sx={({ shadows }) => ({
         p: 2,
@@ -58,6 +77,7 @@ function RegForm() {
       <Typography component="h1" variant="h4" textAlign="center" gutterBottom>
         Login
       </Typography>
+      <AuthAlert text={errorText} setText={setErrorText} />
       <Stack spacing={2} mt={3}>
         <TextField
           name="email"
@@ -97,6 +117,7 @@ function RegForm() {
                   onClick={() => setShowPass(!showPass)}
                   aria-label="toggle password visibility"
                   edge="end"
+                  sx={{ color: "text.secondary" }}
                 >
                   {showPass ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </IconButton>
@@ -104,13 +125,8 @@ function RegForm() {
             ),
           }}
         />
-        <Button
-          disabled={isSubmitting}
-          type="button"
-          onClick={() => setSubmitting(!isSubmitting)}
-          variant="outlined"
-        >
-          {isSubmitting ? (
+        <Button disabled={isSubmitting} type="submit" variant="outlined">
+          {isLoading ? (
             <CircularProgress color="inherit" size="1.75em" />
           ) : (
             "Log In"

@@ -7,6 +7,9 @@ import {
   IconButton,
   lighten,
   Button,
+  Avatar,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import navlinks from "../../data/navlinks";
@@ -18,11 +21,23 @@ import {
 import { RxHamburgerMenu as MenuIcon } from "react-icons/rx";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
 import NavDrawer from "./NavDrawer";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Navbar() {
+  const [menuEl, setMenuEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(menuEl);
+  const { user, loading } = useAuth();
   const [openMenu, setOpenMenu] = useState(false);
   const { pathname } = useLocation();
   const { mode, theme, toggleTheme } = useThemeToggler();
+
+  function handleAvatarClick(event: React.MouseEvent<HTMLElement>) {
+    setMenuEl(event.currentTarget);
+  }
+
+  function handleAvatarMenuClose() {
+    setMenuEl(null);
+  }
 
   function toggleOpenMenu() {
     setOpenMenu((prev) => !prev);
@@ -64,12 +79,54 @@ function Navbar() {
         <IconButton onClick={toggleTheme}>
           {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
+        <IconButton size="small" onClick={handleAvatarClick}>
+          <Avatar>{user && user.displayName && user.displayName[0]}</Avatar>
+        </IconButton>
         {/* Toggle Menu */}
         <IconButton onClick={toggleOpenMenu}>
           <MenuIcon />
         </IconButton>
       </Toolbar>
       <NavDrawer open={openMenu} onClose={toggleOpenMenu} />
+      <Menu
+        anchorEl={menuEl}
+        id="account-menu"
+        open={open}
+        onClose={handleAvatarMenuClose}
+        onClick={handleAvatarMenuClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem>
+          <Avatar /> Logout
+        </MenuItem>
+      </Menu>
     </AppBar>
   );
 }
