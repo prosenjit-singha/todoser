@@ -14,9 +14,29 @@ import {
   MdOutlineVisibilityOff as VisibilityOffIcon,
 } from "react-icons/md";
 import OrDivider from "./OrDivider";
+import { useFormik, FormikHelpers } from "formik";
+import registerFormSchema from "../../schemas/registerForm.schema";
+
+const initialValues = {
+  fullName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 function RegForm() {
   const [showPass, setShowPass] = useState(false);
+  const { values, handleChange, handleBlur, handleSubmit, errors, touched } =
+    useFormik({
+      initialValues,
+      onSubmit,
+      validationSchema: registerFormSchema,
+    });
+
+  function onSubmit(
+    v: typeof initialValues,
+    actions: FormikHelpers<typeof initialValues>
+  ) {}
   return (
     <Paper
       elevation={3}
@@ -33,6 +53,14 @@ function RegForm() {
       <Stack spacing={2} mt={3}>
         <TextField
           name="fullName"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={!!errors.fullName && !!touched.fullName}
+          helperText={
+            !!errors.fullName && !!touched.fullName
+              ? errors.fullName
+              : undefined
+          }
           label="Full Name"
           size="small"
           fullWidth
@@ -41,6 +69,12 @@ function RegForm() {
         />
         <TextField
           name="email"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={!!errors.email && !!touched.email}
+          helperText={
+            !!errors.email && !!touched.email ? errors.email : undefined
+          }
           label="Email"
           type="email"
           size="small"
@@ -49,6 +83,14 @@ function RegForm() {
         />
         <TextField
           name="password"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={!!errors.password && !!touched.password}
+          helperText={
+            !!errors.password && !!touched.password
+              ? errors.password
+              : undefined
+          }
           type={showPass ? "text" : "password"}
           placeholder="password"
           label="Password"
@@ -70,6 +112,14 @@ function RegForm() {
         />
         <TextField
           name="confirmPassword"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={!!errors.confirmPassword && !!touched.confirmPassword}
+          helperText={
+            !!errors.confirmPassword && !!touched.confirmPassword
+              ? errors.confirmPassword
+              : undefined
+          }
           label="Confirm Password"
           type={showPass ? "text" : "password"}
           placeholder="password"

@@ -1,7 +1,6 @@
 import { Grid, styled, Box } from "@mui/material";
 import { Main } from "../../components/styled";
 import RegForm from "./RegForm";
-import regImg from "../../assets/svgs/sign-up.svg";
 
 function Register() {
   return (
