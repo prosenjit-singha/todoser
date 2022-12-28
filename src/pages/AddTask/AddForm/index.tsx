@@ -221,7 +221,7 @@ function AddForm() {
           <Tooltip
             title="Cancel"
             describeChild
-            sx={{ mx: [1, 2], mb: "auto", color: "error.light" }}
+            sx={{ mr: [1, 2], mb: "auto", color: "error.light" }}
           >
             <IconButton onClick={() => setOpen(false)}>
               <MdClose />

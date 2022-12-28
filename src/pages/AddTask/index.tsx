@@ -8,7 +8,12 @@ function AddTask() {
   const { tasks } = useTasks();
   return (
     <Main sx={{ p: [0, 2, 3] }}>
-      <Paper elevation={3}>
+      <Paper
+        sx={({ shadows }) => ({
+          my: [2, 3],
+          boxShadow: ["none", shadows[5], shadows[10]],
+        })}
+      >
         <List>
           <AddForm />
           {tasks.map((task, i) => (
