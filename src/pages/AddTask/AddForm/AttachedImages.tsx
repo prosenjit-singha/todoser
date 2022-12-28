@@ -51,7 +51,7 @@ const AttachedImages = ({ images, setFieldValue }: AttachedImagesPropsType) => {
           key={i}
           sx={({ palette }) => ({
             color: "text.secondary",
-            borderRadius: 3,
+            borderRadius: 0.5,
             py: 0.5,
             my: 0.5,
             bgcolor:

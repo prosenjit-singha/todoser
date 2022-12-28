@@ -10,12 +10,18 @@ import {
   InputBase,
   Tooltip,
   CircularProgress,
+  Divider,
+  Chip,
+  Alert,
+  Typography,
+  Box,
 } from "@mui/material";
 import {
   MdAdd,
   MdClose,
   MdOutlineNewLabel as AddLabelIcon,
 } from "react-icons/md";
+import { CgUndo as UndoIcon } from "react-icons/cg";
 import { BiImageAdd as AddImageIcon } from "react-icons/bi";
 import { useTasks } from "../../../contexts/TasksProvider";
 import { useFormik } from "formik";
@@ -25,6 +31,9 @@ import { Stack } from "@mui/system";
 import uploadImage from "../../../api/uploadImage";
 import AttachedImages from "./AttachedImages";
 import AddLabelModal from "./AddLabelModal";
+import Toast from "./Toast";
+import { toast } from "react-toastify";
+import { useThemeToggler } from "../../../contexts/ThemeToggler";
 
 const initialValues = {
   title: "",
@@ -34,7 +43,9 @@ const initialValues = {
 };
 
 function AddForm() {
+  const { mode } = useThemeToggler();
   const [open, setOpen] = useState(false);
+  const [openToast, setOpenToast] = useState(false);
   const [openAddLabel, setOpenAddLabel] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const {
@@ -84,8 +95,33 @@ function AddForm() {
       isCompleted: false,
       images: [],
     });
-
+    toast.success(<Success />, {
+      theme: mode,
+      position: "top-center",
+      autoClose: 3000,
+      closeButton: () => (
+        <Tooltip title="Close Toast" describeChild>
+          <IconButton
+            sx={{
+              display: "flex",
+              height: "fit-content",
+              width: "fit-content",
+              mx: "auto",
+            }}
+          >
+            <MdClose />
+          </IconButton>
+        </Tooltip>
+      ),
+    });
     actions.resetForm();
+  }
+
+  function removeLabel(name: string) {
+    setFieldValue(
+      "labels",
+      values.labels.filter((label) => label !== name)
+    );
   }
 
   return (
@@ -132,11 +168,22 @@ function AddForm() {
                 autoComplete="off"
                 // multiline
               />
+              <Divider />
               <AttachedImages
                 images={values.images}
                 setFieldValue={setFieldValue}
               />
-
+              <Stack direction="row" sx={{ gap: 1, my: 1 }}>
+                {values.labels.map((label, i) => (
+                  <Chip
+                    size="small"
+                    label={label}
+                    key={i}
+                    onDelete={() => removeLabel(label)}
+                  />
+                ))}
+              </Stack>
+              {/* Action buttons */}
               <Stack direction="row" spacing={1}>
                 <Tooltip title="Add label" describeChild>
                   <IconButton
@@ -188,8 +235,28 @@ function AddForm() {
         open={openAddLabel}
         onClose={() => setOpenAddLabel(false)}
       />
+      <Toast
+        open={openToast}
+        onClose={() => setOpenToast(false)}
+        text="Task Added!"
+      />
     </>
   );
 }
 
 export default AddForm;
+
+const Success = () => {
+  const { deleteTask } = useTasks();
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Typography>Task Added!</Typography>
+
+      <Tooltip title="Undo" describeChild>
+        <IconButton onClick={() => deleteTask()} sx={{ ml: 1 }}>
+          <UndoIcon />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+};

@@ -13,6 +13,9 @@ const globalStyles = (theme: Theme) => css`
     text-decoration: none;
     color: initial;
   }
+  .Toastify__toast {
+    align-items: center;
+  }
 `;
 
 export default globalStyles;

@@ -23,17 +23,15 @@ function TaskItem({ task }: PropsType) {
           display: "flex !important",
         },
       }}
-      secondaryAction={
-        <IconButton>
-          <ThreeDotsVertical />
-        </IconButton>
-      }
-      disablePadding
+      // secondaryAction={
+      //   <IconButton>
+      //     <ThreeDotsVertical />
+      //   </IconButton>
+      // }
     >
-      <Checkbox sx={{ position: "absolute", left: "16px" }} />
-      <ListItemButton>
-        <ListItemText sx={{ ml: 8 }}>{task.title}</ListItemText>
-      </ListItemButton>
+      <Checkbox disabled sx={{ position: "absolute", left: "16px" }} />
+
+      <ListItemText sx={{ ml: 8 }}>{task.title}</ListItemText>
     </ListItem>
   );
 }
