@@ -59,6 +59,7 @@ function RegForm() {
       const { user } = await register({ email: v.email, password: v.password });
       await updateProfile(user, { displayName: v.fullName });
       actions.resetForm();
+      setErrorText("");
       navigate("/", { replace: true });
     } catch (err: any) {
       if (err.code === "auth/email-already-in-use")
@@ -92,6 +93,7 @@ function RegForm() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.fullName && !!touched.fullName}
+          disabled={isSubmitting}
           helperText={
             !!errors.fullName && !!touched.fullName
               ? errors.fullName
@@ -109,6 +111,7 @@ function RegForm() {
           onBlur={handleBlur}
           value={values.email}
           error={!!errors.email && !!touched.email}
+          disabled={isSubmitting}
           helperText={
             !!errors.email && !!touched.email ? errors.email : undefined
           }
@@ -124,6 +127,7 @@ function RegForm() {
           onBlur={handleBlur}
           value={values.password}
           error={!!errors.password && !!touched.password}
+          disabled={isSubmitting}
           helperText={
             !!errors.password && !!touched.password
               ? errors.password
@@ -155,6 +159,7 @@ function RegForm() {
           onBlur={handleBlur}
           value={values.confirmPassword}
           error={!!errors.confirmPassword && !!touched.confirmPassword}
+          disabled={isSubmitting}
           helperText={
             !!errors.confirmPassword && !!touched.confirmPassword
               ? errors.confirmPassword

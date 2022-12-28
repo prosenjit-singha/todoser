@@ -8,18 +8,25 @@ import {
   Collapse,
   IconButton,
   InputBase,
+  Tooltip,
 } from "@mui/material";
-import { MdAdd, MdClose } from "react-icons/md";
+import {
+  MdAdd,
+  MdClose,
+  MdOutlineNewLabel as AddLabelIcon,
+} from "react-icons/md";
+import { BiImageAdd as AddImageIcon } from "react-icons/bi";
 import { useTasks } from "../../contexts/TasksProvider";
 import { useFormik } from "formik";
 import addTaskSchema from "../../schemas/addTask.schema";
 import { FormikHelpers } from "formik/dist/types";
+import { Stack } from "@mui/system";
 
 const initialValues = {
   title: "",
   desc: "",
   label: "",
-  imageURL: "",
+  image: [],
 };
 
 function AddForm() {
@@ -32,17 +39,22 @@ function AddForm() {
     });
   const { addTask } = useTasks();
 
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      console.info(typeof e.target.files[0]);
+    }
+  }
+
   function onSubmit(
     v: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
   ) {
-    console.info("submittion");
     addTask({
       title: v.title,
       desc: v.desc,
       label: [],
       isCompleted: false,
-      imageURL: "",
+      image: [],
     });
 
     actions.resetForm();
@@ -94,6 +106,27 @@ function AddForm() {
                 placeholder="Details"
                 fullWidth
               />
+              <Stack direction="row" spacing={1}>
+                <Tooltip title="Add label" describeChild>
+                  <IconButton sx={{ color: "text.secondary" }}>
+                    <AddLabelIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Add Image" describeChild>
+                  <IconButton
+                    component="label"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    <AddImageIcon />
+                    <input
+                      hidden
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      type="file"
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
               <input type="submit" hidden />
             </form>
           </ListItemText>

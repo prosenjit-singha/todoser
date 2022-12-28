@@ -3,7 +3,10 @@ type TaskType = {
   title: string;
   desc: string;
   label: string[];
-  imageURL: string;
+  image: {
+    url: string;
+    name: string;
+  }[];
 };
 
 export default TaskType;

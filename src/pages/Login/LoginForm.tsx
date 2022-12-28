@@ -65,7 +65,7 @@ function RegForm() {
         setErrorText("User email or password is wrong");
       else setErrorText("An error occur while login");
     } finally {
-      setIsLoading((prev) => !prev);
+      setIsLoading(false);
     }
   }
   return (
