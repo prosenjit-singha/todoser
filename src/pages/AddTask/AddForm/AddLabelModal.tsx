@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -10,6 +10,9 @@ import {
   Chip,
   Stack,
   Box,
+  Snackbar,
+  Alert,
+  Slide,
 } from "@mui/material";
 import { FormikErrors } from "formik";
 import { MdAdd } from "react-icons/md";
@@ -36,6 +39,7 @@ type PropsType = {
 
 function AddLabelModal({ open, onClose, labels, setFieldValue }: PropsType) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [openToast, setOpenToast] = useState(false);
   function handleClose() {
     onClose();
   }
@@ -44,11 +48,20 @@ function AddLabelModal({ open, onClose, labels, setFieldValue }: PropsType) {
     e.preventDefault();
     if (inputRef.current) {
       const label = inputRef.current.value;
-      if (labels.indexOf(label) > -1)
+      if (labels.indexOf(label) > -1) {
+        setOpenToast(true);
+      } else {
         setFieldValue("labels", [label, ...labels]);
-      else {
+        inputRef.current.value = "";
       }
     }
+  }
+
+  function removeLabel(name: string) {
+    setFieldValue(
+      "labels",
+      labels.filter((label) => label !== name)
+    );
   }
 
   return (
@@ -58,6 +71,7 @@ function AddLabelModal({ open, onClose, labels, setFieldValue }: PropsType) {
           <TextField
             autoComplete="off"
             autoFocus
+            required
             name="label"
             margin="dense"
             label="Label"
@@ -80,7 +94,12 @@ function AddLabelModal({ open, onClose, labels, setFieldValue }: PropsType) {
         </Box>
         <Stack mt={2} direction="row" flexWrap="wrap" sx={{ gap: 1 }}>
           {labels.map((label, i) => (
-            <Chip key={i} label={label} />
+            <Chip
+              key={i}
+              size="small"
+              label={label}
+              onDelete={() => removeLabel(label)}
+            />
           ))}
         </Stack>
       </DialogContent>
@@ -89,6 +108,22 @@ function AddLabelModal({ open, onClose, labels, setFieldValue }: PropsType) {
           Close
         </Button>
       </DialogActions>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openToast}
+        autoHideDuration={3000}
+        onClose={() => setOpenToast(false)}
+        TransitionComponent={Slide}
+      >
+        <Alert
+          onClose={() => setOpenToast(false)}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Entered text is already included
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 }
