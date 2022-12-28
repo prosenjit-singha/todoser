@@ -2,10 +2,12 @@ type TaskType = {
   isCompleted: boolean;
   title: string;
   desc: string;
-  label: string[];
-  image: {
+  labels: string[];
+  images: {
+    fileName: string;
+    title: string;
     url: string;
-    name: string;
+    delete_url: string;
   }[];
 };
 
