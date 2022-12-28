@@ -4,7 +4,7 @@ import TaskType from "../../types/task.type";
 type ValueType = {
   tasks: TaskType[];
   addTask: (task: TaskType) => void;
-  deleteTask: () => void;
+  deleteTask: (index: number) => void;
   updateTask: (index: number, updatedTask: TaskType) => void;
 };
 
@@ -16,9 +16,8 @@ const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   function addTask(task: TaskType) {
     setTasks([task, ...tasks]);
   }
-  function deleteTask() {
-    console.info("Deleted");
-    // setTasks((prev) => prev.filter((_, i) => i !== index));
+  function deleteTask(index: number) {
+    setTasks((prev) => prev.filter((_, i) => i !== index));
   }
 
   function updateTask(index: number, updatedTask: TaskType) {

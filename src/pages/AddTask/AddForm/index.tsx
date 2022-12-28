@@ -61,7 +61,7 @@ function AddForm() {
     onSubmit,
     validationSchema: addTaskSchema,
   });
-  const { addTask } = useTasks();
+  const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     try {
@@ -95,7 +95,7 @@ function AddForm() {
       isCompleted: false,
       images: [],
     });
-    toast.success(<Success />, {
+    toast.success(<Success onUndo={() => deleteTask(0)} />, {
       theme: mode,
       position: "top-center",
       autoClose: 3000,
@@ -246,14 +246,13 @@ function AddForm() {
 
 export default AddForm;
 
-const Success = () => {
-  const { deleteTask } = useTasks();
+const Success = ({ onUndo }: { onUndo: () => void }) => {
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       <Typography>Task Added!</Typography>
 
       <Tooltip title="Undo" describeChild>
-        <IconButton onClick={() => deleteTask()} sx={{ ml: 1 }}>
+        <IconButton onClick={onUndo} sx={{ ml: 1 }}>
           <UndoIcon />
         </IconButton>
       </Tooltip>
