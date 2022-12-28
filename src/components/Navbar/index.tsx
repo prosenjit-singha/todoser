@@ -10,6 +10,9 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  colors,
+  ListItemText,
+  ListItemIcon,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import navlinks from "../../data/navlinks";
@@ -17,6 +20,7 @@ import Logo from "../Logo";
 import {
   MdOutlineDarkMode as DarkModeIcon,
   MdOutlineLightMode as LightModeIcon,
+  MdLogout as LogOutIcon,
 } from "react-icons/md";
 import { RxHamburgerMenu as MenuIcon } from "react-icons/rx";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
@@ -26,7 +30,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function Navbar() {
   const [menuEl, setMenuEl] = useState<null | HTMLElement>(null);
   const open = Boolean(menuEl);
-  const { user, loading } = useAuth();
+  const { user, loading, logOut } = useAuth();
   const [openMenu, setOpenMenu] = useState(false);
   const { pathname } = useLocation();
   const { mode, theme, toggleTheme } = useThemeToggler();
@@ -46,6 +50,13 @@ function Navbar() {
   function isActive(link: string) {
     return pathname === link ? "active" : undefined;
   }
+
+  function handleLogOutClick() {
+    logOut()
+      .then(() => {})
+      .catch((err) => console.error(err));
+  }
+
   return (
     <AppBar
       sx={{
@@ -67,7 +78,13 @@ function Navbar() {
           ))}
         </Stack>
         {/* Login / Register  */}
-        <Stack direction="row" spacing={2} mr={1} alignItems="center">
+        <Stack
+          direction="row"
+          spacing={2}
+          mr={1}
+          alignItems="center"
+          sx={{ display: !loading && !user?.uid ? "flex" : "none" }}
+        >
           <Navlink sx={{ display: ["none", "inline"] }} to="/login">
             Login
           </Navlink>
@@ -79,11 +96,21 @@ function Navbar() {
         <IconButton onClick={toggleTheme}>
           {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
-        <IconButton size="small" onClick={handleAvatarClick}>
+        {/* Avatar */}
+        <IconButton
+          size="small"
+          onClick={handleAvatarClick}
+          sx={{ display: !loading && !user?.uid ? "none" : "flex" }}
+        >
           <Avatar>{user && user.displayName && user.displayName[0]}</Avatar>
         </IconButton>
         {/* Toggle Menu */}
-        <IconButton onClick={toggleOpenMenu}>
+        <IconButton
+          onClick={toggleOpenMenu}
+          sx={{
+            display: { md: "none" },
+          }}
+        >
           <MenuIcon />
         </IconButton>
       </Toolbar>
@@ -100,6 +127,7 @@ function Navbar() {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
+            bgcolor: mode === "dark" ? colors.grey[900] : colors.grey[100],
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
@@ -114,7 +142,7 @@ function Navbar() {
               right: 14,
               width: 10,
               height: 10,
-              bgcolor: "background.paper",
+              bgcolor: mode === "dark" ? colors.grey[900] : colors.grey[100],
               transform: "translateY(-50%) rotate(45deg)",
               zIndex: 0,
             },
@@ -123,8 +151,11 @@ function Navbar() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
-          <Avatar /> Logout
+        <MenuItem onClick={handleLogOutClick}>
+          <ListItemIcon>
+            <LogOutIcon size="1.2em" />
+          </ListItemIcon>
+          <ListItemText>Log Out</ListItemText>
         </MenuItem>
       </Menu>
     </AppBar>
