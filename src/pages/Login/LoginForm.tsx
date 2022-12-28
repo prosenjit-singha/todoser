@@ -29,7 +29,7 @@ const initialValues = {
 function RegForm() {
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorText, setErrorText] = useState("Error");
+  const [errorText, setErrorText] = useState("");
   const navigate = useNavigate();
   const { logIn } = useAuth();
   const {
@@ -51,14 +51,21 @@ function RegForm() {
     v: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
   ) {
+    setIsLoading(true);
     try {
       await logIn({ email: v.email, password: v.password });
+      setErrorText("");
       actions.resetForm();
       navigate("/", { replace: true });
-    } catch (err) {
-      console.info(err);
+    } catch (err: any) {
+      if (
+        err.code === "auth/wrong-password" ||
+        err.code === "auth/user-not-found"
+      )
+        setErrorText("User email or password is wrong");
+      else setErrorText("An error occur while login");
     } finally {
-      setIsLoading(!isLoading);
+      setIsLoading((prev) => !prev);
     }
   }
   return (
@@ -93,6 +100,7 @@ function RegForm() {
           size="small"
           fullWidth
           placeholder="john@example.com"
+          disabled={isSubmitting}
         />
         <TextField
           name="password"
@@ -110,6 +118,7 @@ function RegForm() {
           label="Password"
           size="small"
           fullWidth
+          disabled={isSubmitting}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
