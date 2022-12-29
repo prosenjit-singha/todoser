@@ -35,7 +35,7 @@ function RegForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register, setAccessToken } = useAuth();
   const {
     values,
     handleChange,
@@ -63,6 +63,8 @@ function RegForm() {
           uid: user.uid,
           email: user.email || "",
         },
+        onSuccess: () =>
+          setAccessToken(localStorage.getItem("access-token") || ""),
       });
       await updateProfile(user, { displayName: v.fullName });
       actions.resetForm();

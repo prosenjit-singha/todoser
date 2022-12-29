@@ -19,6 +19,8 @@ type ValueType = {
   }) => Promise<UserCredential>;
   logOut: () => Promise<void>;
   logInWithGoogle: () => Promise<UserCredential>;
+  accessToken: string;
+  setAccessToken: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const AuthContext = createContext({} as ValueType);
@@ -26,6 +28,9 @@ const AuthContext = createContext({} as ValueType);
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("access-token") || ""
+  );
 
   const value: ValueType = {
     user,
@@ -35,6 +40,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     logOut,
     logInWithGoogle,
     register,
+    accessToken,
+    setAccessToken,
   };
 
   useEffect(() => {

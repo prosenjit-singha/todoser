@@ -32,7 +32,7 @@ function RegForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
   const navigate = useNavigate();
-  const { logIn } = useAuth();
+  const { logIn, setAccessToken } = useAuth();
   const {
     values,
     errors,
@@ -57,6 +57,8 @@ function RegForm() {
       const { user } = await logIn({ email: v.email, password: v.password });
       await getAccessToken({
         payload: { uid: user.uid, email: user.email || "" },
+        onSuccess: () =>
+          setAccessToken(localStorage.getItem("access-token") || ""),
       });
       setErrorText("");
       actions.resetForm();
