@@ -35,7 +35,7 @@ import { toast } from "react-toastify";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import updateTaskToServer from "../../../api/updateTask";
 import { useAuth } from "../../../contexts/AuthContext";
-import useTasks, { useAddTask } from "../../../hooks/useTasks";
+import useTasks, { useMutateTasks } from "../../../hooks/useTasks";
 // import { useTasks } from "../../../contexts/TasksProvider";
 
 const initialValues = {
@@ -54,7 +54,7 @@ function AddForm() {
   const [isUploading, setIsUploading] = useState(false);
   const { user } = useAuth();
 
-  const { data = [], refetch } = useTasks(user && user.uid ? user.uid : "");
+  const { data = [], refetch } = useTasks();
   const {
     values,
     errors,
@@ -68,7 +68,7 @@ function AddForm() {
     onSubmit,
     validationSchema: addTaskSchema,
   });
-  const { mutate } = useAddTask();
+  const { mutate } = useMutateTasks();
   // const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -105,7 +105,13 @@ function AddForm() {
       comment: "",
     };
 
-    mutate({ uid: (user && user.uid) || "", newTask, tasks: data });
+    mutate({
+      uid: (user && user.uid) || "",
+      newTask,
+      tasks: data,
+      index: 0,
+      operation: "add",
+    });
 
     // toast.promise(
     //   updateTaskToServer({

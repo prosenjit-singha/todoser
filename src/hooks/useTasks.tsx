@@ -1,22 +1,44 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "../api";
+import { useAuth } from "../contexts/AuthContext";
 import TaskType from "../types/task.type";
 
-type AddTaskProps = {
+type UpdateDeleteTaskProps = {
   uid: string;
   newTask: TaskType;
   tasks: TaskType[];
+  index: number;
 };
 
-const addTask = async ({ uid, newTask, tasks }: AddTaskProps) => {
-  const payload = [newTask, ...tasks];
+type UpdateTasksProps = {
+  uid: string;
+  newTask: TaskType;
+  tasks: TaskType[];
+  index: number;
+  operation: "update" | "add" | "delete";
+};
+
+const updateTasks = async ({
+  uid,
+  newTask,
+  tasks,
+  index,
+  operation,
+}: UpdateTasksProps) => {
+  let payload: TaskType[] = [];
+  if (operation === "add") payload = [newTask, ...tasks];
+  if (operation === "delete") payload = tasks.filter((_task, i) => i !== index);
+  if (operation === "update")
+    payload = tasks.map((task, i) => (i === index ? newTask : task));
   return await api.post(`/tasks?uid=${uid}`, payload);
 };
 
-const useTasks = (uid: string) => {
-  if (!uid) console.info("No uid");
+const useTasks = () => {
+  // if (!uid) console.info("No uid");
+  const { user } = useAuth();
+  const uid = (user && user.uid) || "";
   return useQuery({
-    queryKey: ["tasks", uid],
+    queryKey: ["tasks", (user && user.uid) || ""],
     queryFn: async (): Promise<TaskType[]> => {
       const { data } = await api.get(`/tasks?uid=${uid}`, {
         headers: {
@@ -32,17 +54,14 @@ const useTasks = (uid: string) => {
   });
 };
 
-const useDeleteTask = () => {};
-
-export const useAddTask = () => {
+export const useMutateTasks = () => {
   const queryClient = useQueryClient();
-  return useMutation(addTask, {
-    onMutate: async ({ newTask, uid }: AddTaskProps) => {
+  return useMutation(updateTasks, {
+    onMutate: async ({ newTask, uid }: UpdateTasksProps) => {
       await queryClient.cancelQueries(["tasks"]);
       const prevTasks = queryClient.getQueryData(["tasks", uid]);
-      queryClient.setQueryData<TaskType[]>(["tasks", uid], (oldTasks) => {
-        console.info("oldTasks", oldTasks);
-        return oldTasks ? [newTask, ...oldTasks] : [];
+      queryClient.setQueryData<TaskType[]>(["tasks", uid], (oldTasks = []) => {
+        return [newTask, ...oldTasks];
       });
       return { prevTasks };
     },

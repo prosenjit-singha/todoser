@@ -11,9 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function MyTasks() {
   // const { tasks } = useTasks();
   const { user } = useAuth();
-  const { data: tasks = [], refetch } = useTasks(
-    user && user.uid ? user.uid : ""
-  );
+  const { data: tasks = [], refetch } = useTasks();
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<{
     index: number;
     task: TaskType;

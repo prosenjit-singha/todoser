@@ -19,6 +19,7 @@ import { useThemeToggler } from "../../contexts/ThemeToggler";
 import TaskType from "../../types/task.type";
 import { useTasks } from "../../contexts/TasksProvider";
 import { toast } from "react-toastify";
+import { useMutateTasks } from "../../hooks/useTasks";
 
 type PropsType = {
   task: TaskType;
@@ -30,6 +31,7 @@ function TaskItem({ task, index }: PropsType) {
   const { mode, theme } = useThemeToggler();
   const [openComment, setOpenComment] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { mutate: mutateTask } = useMutateTasks();
 
   async function handleClick() {
     setOpenComment((prev) => !prev);
@@ -45,6 +47,9 @@ function TaskItem({ task, index }: PropsType) {
 
   function handleDeleteClick() {
     deleteTask(index);
+    // mutateTask({
+    //   uid: user && user.uid
+    // })
     toast.success("Task deleted!");
   }
 

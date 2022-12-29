@@ -1,10 +1,11 @@
 import { List, Paper, Typography } from "@mui/material";
 import { Main } from "../../components/styled";
-import { useTasks } from "../../contexts/TasksProvider";
+import useTasks from "../../hooks/useTasks";
 import TaskItem from "./TaskItem";
+// import { useTasks } from "../../contexts/TasksProvider";
 
 function CompletedTasks() {
-  const { tasks } = useTasks();
+  const { data: tasks = [] } = useTasks();
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper

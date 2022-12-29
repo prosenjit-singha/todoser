@@ -10,7 +10,7 @@ import useTasks from "../../hooks/useTasks";
 function AddTask() {
   // const { tasks } = useTasks();
   const { user } = useAuth();
-  const { data: tasks = [] } = useTasks(user && user.uid ? user.uid : "");
+  const { data: tasks = [] } = useTasks();
 
   return (
     <Main sx={{ p: [0, 2, 3] }}>
