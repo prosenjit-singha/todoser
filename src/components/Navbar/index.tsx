@@ -65,18 +65,20 @@ function Navbar() {
     >
       <Toolbar>
         <Logo sx={{ mr: "auto" }} />
-        <Stack
-          direction="row"
-          spacing={2}
-          mr={3}
-          sx={{ display: ["none", "none", "flex"] }}
-        >
-          {navlinks.map((link, i) => (
-            <Navlink active={isActive(link.path)} key={i} to={link.path}>
-              {link.name}
-            </Navlink>
-          ))}
-        </Stack>
+        {user && user.uid && (
+          <Stack
+            direction="row"
+            spacing={2}
+            mr={3}
+            sx={{ display: ["none", "none", "flex"] }}
+          >
+            {navlinks.map((link, i) => (
+              <Navlink active={isActive(link.path)} key={i} to={link.path}>
+                {link.name}
+              </Navlink>
+            ))}
+          </Stack>
+        )}
         {/* Login / Register  */}
         <Stack
           direction="row"
@@ -85,11 +87,8 @@ function Navbar() {
           alignItems="center"
           sx={{ display: !loading && !user?.uid ? "flex" : "none" }}
         >
-          <Navlink sx={{ display: ["none", "inline"] }} to="/login">
+          <Button component={Link} to="/login" variant="outlined">
             Login
-          </Navlink>
-          <Button component={Link} to="/register" variant="outlined">
-            Register
           </Button>
         </Stack>
         {/* Toggle Theme Button */}
