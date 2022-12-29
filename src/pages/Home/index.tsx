@@ -11,7 +11,7 @@ function Home() {
   const { mode } = useThemeToggler();
   const { user, loading } = useAuth();
 
-  if (!loading) return <Loading />;
+  if (loading) return <Loading />;
   if (user && user.uid) return <Navigate to="/add-task" replace />;
 
   return (

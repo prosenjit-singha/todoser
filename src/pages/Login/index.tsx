@@ -1,8 +1,14 @@
 import { styled, Box } from "@mui/material";
+import { Navigate } from "react-router-dom";
+import Loading from "../../components/Loading";
 import { Main } from "../../components/styled";
+import { useAuth } from "../../contexts/AuthContext";
 import RegForm from "./LoginForm";
 
 function Login() {
+  const { user, loading } = useAuth();
+  if (loading) return <Loading />;
+  if (user && user.uid) return <Navigate to="/add-task" replace />;
   return (
     <Main>
       <Box
