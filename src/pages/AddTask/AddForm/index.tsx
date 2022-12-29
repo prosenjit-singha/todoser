@@ -25,7 +25,6 @@ import {
 import { HiPlus } from "react-icons/hi";
 import { CgUndo as UndoIcon } from "react-icons/cg";
 import { BiImageAdd as AddImageIcon } from "react-icons/bi";
-import { useTasks } from "../../../contexts/TasksProvider";
 import { useFormik } from "formik";
 import addTaskSchema from "../../../schemas/addTask.schema";
 import { FormikHelpers } from "formik/dist/types";
@@ -36,6 +35,10 @@ import AddLabelModal from "./AddLabelModal";
 import Toast from "./Toast";
 import { toast } from "react-toastify";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
+import updateTaskToServer from "../../../api/updateTask";
+import { useAuth } from "../../../contexts/AuthContext";
+import useTasks from "../../../hooks/useTasks";
+// import { useTasks } from "../../../contexts/TasksProvider";
 
 const initialValues = {
   title: "",
@@ -50,6 +53,9 @@ function AddForm() {
   const [openToast, setOpenToast] = useState(false);
   const [openAddLabel, setOpenAddLabel] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const { user } = useAuth();
+
+  const { data = [], refetch } = useTasks(user && user.uid ? user.uid : "");
   const {
     values,
     errors,
@@ -63,7 +69,7 @@ function AddForm() {
     onSubmit,
     validationSchema: addTaskSchema,
   });
-  const { addTask, deleteTask } = useTasks();
+  // const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     try {
@@ -86,37 +92,52 @@ function AddForm() {
     }
   }
 
-  function onSubmit(
+  async function onSubmit(
     v: typeof initialValues,
     actions: FormikHelpers<typeof initialValues>
   ) {
-    addTask({
+    const newTask = {
       title: v.title,
       details: v.desc,
       labels: v.labels,
       isCompleted: false,
       images: v.images,
       comment: "",
-    });
-    toast.success(<Success onUndo={() => deleteTask(0)} />, {
-      theme: mode,
-      position: "top-center",
-      autoClose: 3000,
-      closeButton: () => (
-        <Tooltip title="Close Toast" describeChild>
-          <IconButton
-            sx={{
-              display: "flex",
-              height: "fit-content",
-              width: "fit-content",
-              mx: "auto",
-            }}
-          >
-            <MdClose />
-          </IconButton>
-        </Tooltip>
-      ),
-    });
+    };
+
+    toast.promise(
+      updateTaskToServer({
+        uid: user?.uid || "",
+        email: user?.email || "",
+        tasks: [newTask, ...data],
+      }).then(() => refetch()),
+      {
+        pending: "Adding...",
+        success: "Task added!",
+        error: "An error occur while adding the task",
+      }
+    );
+
+    // addTask(newTask);
+    // toast.success(<Success onUndo={() => deleteTask(0)} />, {
+    //   theme: mode,
+    //   position: "top-center",
+    //   autoClose: 3000,
+    //   closeButton: () => (
+    //     <Tooltip title="Close Toast" describeChild>
+    //       <IconButton
+    //         sx={{
+    //           display: "flex",
+    //           height: "fit-content",
+    //           width: "fit-content",
+    //           mx: "auto",
+    //         }}
+    //       >
+    //         <MdClose />
+    //       </IconButton>
+    //     </Tooltip>
+    //   ),
+    // });
     actions.resetForm();
   }
 
@@ -126,6 +147,8 @@ function AddForm() {
       values.labels.filter((label) => label !== name)
     );
   }
+
+  // console.info(data);
 
   return (
     <>

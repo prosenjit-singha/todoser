@@ -11,24 +11,7 @@ type ValueType = {
 const TasksContext = createContext<ValueType>({} as ValueType);
 
 const TasksProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tasks, setTasks] = useState<TaskType[]>([
-    {
-      title: "Demo Task 2",
-      labels: ["label-1", "label-2"],
-      images: [],
-      details: "Demo 2 description",
-      isCompleted: false,
-      comment: "",
-    },
-    {
-      title: "Demo Task 1",
-      labels: ["label-1", "label-2"],
-      images: [],
-      details: "Demo 1 description",
-      isCompleted: false,
-      comment: "",
-    },
-  ]);
+  const [tasks, setTasks] = useState<TaskType[]>([]);
 
   function addTask(task: TaskType) {
     setTasks([task, ...tasks]);
