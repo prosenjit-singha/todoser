@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   colors,
+  Tooltip,
 } from "@mui/material";
 import { useState } from "react";
 import TaskType from "../../../types/task.type";
@@ -16,13 +17,47 @@ import { BsThreeDotsVertical as ThreeDotsVertical } from "react-icons/bs";
 import { FiEdit as EditIcon } from "react-icons/fi";
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
+import { useTasks } from "../../../contexts/TasksProvider";
 
-function TaskItem({ task }: { task: TaskType }) {
+type PropsType = {
+  index: number;
+  task: TaskType;
+  openUpdateTaskModal: (data: { index: number; task: TaskType }) => void;
+};
+
+function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
+  const [currentTask, setCurrentTask] = useState<{
+    index: number;
+    task: TaskType;
+  } | null>(null);
   const { mode, theme } = useThemeToggler();
   const [enableEdit, setEnableEdit] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(menuAnchor);
-  const closeMenu = () => setMenuAnchor(null);
+  const { updateTask } = useTasks();
+  const closeMenu = () => {
+    setMenuAnchor(null);
+    setCurrentTask(null);
+  };
+
+  function handleOpenMenu(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    index: number,
+    task: TaskType
+  ) {
+    setCurrentTask({ index, task });
+    setMenuAnchor(e.currentTarget);
+  }
+
+  function handleEditClick() {
+    setMenuAnchor(null);
+    currentTask && openUpdateTaskModal(currentTask);
+  }
+
+  function handleCompleted() {
+    const updatedTask: TaskType = { ...task, isCompleted: true };
+    setTimeout(() => updateTask(index, updatedTask), 350);
+  }
 
   return (
     <>
@@ -39,13 +74,15 @@ function TaskItem({ task }: { task: TaskType }) {
           },
         }}
       >
-        <Checkbox sx={{ mr: 2, mb: "auto" }} />
+        <Tooltip title="Mark as completed" describeChild>
+          <Checkbox onChange={handleCompleted} sx={{ mr: 2, mb: "auto" }} />
+        </Tooltip>
         <Stack>
           <Typography sx={{ fontSize: 18 }}>{task.title}</Typography>
         </Stack>
         <IconButton
           sx={{ ml: "auto", visibility: "hidden" }}
-          onClick={(e) => setMenuAnchor(e.currentTarget)}
+          onClick={(e) => handleOpenMenu(e, index, task)}
         >
           <ThreeDotsVertical />
         </IconButton>
@@ -60,7 +97,7 @@ function TaskItem({ task }: { task: TaskType }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={closeMenu}>
+        <MenuItem onClick={handleEditClick}>
           <ListItemIcon>
             <EditIcon />
           </ListItemIcon>

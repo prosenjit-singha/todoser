@@ -18,6 +18,7 @@ const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       images: [],
       desc: "Demo 2 description",
       isCompleted: false,
+      comment: "",
     },
     {
       title: "Demo Task 1",
@@ -25,6 +26,7 @@ const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       images: [],
       desc: "Demo 1 description",
       isCompleted: false,
+      comment: "",
     },
   ]);
 

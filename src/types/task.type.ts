@@ -3,6 +3,7 @@ type TaskType = {
   title: string;
   desc: string;
   labels: string[];
+  comment: string;
   images: {
     fileName: string;
     title: string;

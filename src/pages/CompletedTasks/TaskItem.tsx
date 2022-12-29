@@ -16,8 +16,16 @@ import {
 } from "react-icons/md";
 import { BiCommentCheck as CheckIcon } from "react-icons/bi";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
+import TaskType from "../../types/task.type";
+import { useTasks } from "../../contexts/TasksProvider";
 
-function TaskItem() {
+type PropsType = {
+  task: TaskType;
+  index: number;
+};
+
+function TaskItem({ task, index }: PropsType) {
+  const { updateTask, deleteTask } = useTasks();
   const { mode, theme } = useThemeToggler();
   const [openComment, setOpenComment] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -25,6 +33,17 @@ function TaskItem() {
   async function handleClick() {
     setOpenComment((prev) => !prev);
     setTimeout(() => inputRef.current?.focus(), 100);
+  }
+
+  function handleSaveComment() {
+    if (inputRef.current) {
+      const comment = inputRef.current.value;
+      updateTask(index, { ...task, comment });
+    }
+  }
+
+  function handleDeleteClick() {
+    deleteTask(index);
   }
 
   return (
@@ -53,35 +72,47 @@ function TaskItem() {
 
       <ListItemText>
         <Typography variant="h6" component="p">
-          Task 1
+          {task.title}
         </Typography>
-        <Collapse in={openComment} component="form">
+        <Collapse
+          in={openComment}
+          component="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSaveComment();
+          }}
+        >
           <TextField
             inputRef={inputRef}
             label="Comment"
+            defaultValue={task.comment}
             variant="standard"
             fullWidth
             InputProps={{
               endAdornment: (
                 <Tooltip title="Save">
-                  <IconButton>
+                  <IconButton
+                    onClick={handleSaveComment}
+                    sx={{ display: openComment ? "flex" : "none" }}
+                  >
                     <CheckIcon />
                   </IconButton>
                 </Tooltip>
               ),
             }}
+            autoComplete="off"
           />
         </Collapse>
       </ListItemText>
 
       {/* Side Icons */}
-      <Tooltip title="Add Comment" onClick={handleClick} describeChild>
-        <IconButton sx={{ visibility: "hidden" }}>
+      <Tooltip title="Add Comment" describeChild>
+        <IconButton onClick={handleClick} sx={{ visibility: "hidden" }}>
           <CommentIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete Forever" describeChild>
-        <IconButton sx={{ visibility: "hidden" }}>
+        <IconButton onClick={handleDeleteClick} sx={{ visibility: "hidden" }}>
           <DeleteIcon />
         </IconButton>
       </Tooltip>

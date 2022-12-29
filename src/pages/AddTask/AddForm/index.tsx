@@ -94,6 +94,7 @@ function AddForm() {
       labels: [],
       isCompleted: false,
       images: [],
+      comment: "",
     });
     toast.success(<Success onUndo={() => deleteTask(0)} />, {
       theme: mode,

@@ -1,8 +1,10 @@
 import { List, Paper, Typography } from "@mui/material";
 import { Main } from "../../components/styled";
+import { useTasks } from "../../contexts/TasksProvider";
 import TaskItem from "./TaskItem";
 
 function CompletedTasks() {
+  const { tasks } = useTasks();
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper
@@ -11,9 +13,15 @@ function CompletedTasks() {
           boxShadow: ["none", shadows[5], shadows[10]],
         })}
       >
-        <Typography variant="h5">Completed Tasks</Typography>
+        <Typography variant="h5" textAlign="center" sx={{ mb: 2 }}>
+          Completed Tasks
+        </Typography>
         <List>
-          <TaskItem />
+          {/* <TaskItem /> */}
+          {tasks.map(
+            (task, i) =>
+              task.isCompleted && <TaskItem index={i} task={task} key={i} />
+          )}
         </List>
       </Paper>
     </Main>

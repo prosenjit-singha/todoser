@@ -10,9 +10,14 @@ import {
   Stack,
 } from "@mui/material";
 
-function EditModal() {
+type PropsType = {
+  open: boolean;
+  onClose: () => void;
+};
+
+function EditModal({ open, onClose }: PropsType) {
   return (
-    <Dialog open>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Task</DialogTitle>
       <DialogContent>
         <Stack sx={{ mt: 1, gap: 2 }}>
@@ -25,7 +30,7 @@ function EditModal() {
         </Stack>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2, flexWrap: "wrap", gap: 1 }}>
-        <Button variant="outlined" color="error">
+        <Button onClick={onClose} variant="outlined" color="error">
           Descard
         </Button>
         <Button variant="outlined" color="success" style={{ marginLeft: 0 }}>
