@@ -20,6 +20,7 @@ import LogInWithGoogleButton from "../../components/LogInWithGoogleButton";
 import AuthAlert from "../../components/AuthAlert";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../../api/jwtHandler";
 
 const initialValues = {
   email: "",
@@ -53,7 +54,10 @@ function RegForm() {
   ) {
     setIsLoading(true);
     try {
-      await logIn({ email: v.email, password: v.password });
+      const { user } = await logIn({ email: v.email, password: v.password });
+      await getAccessToken({
+        payload: { uid: user.uid, email: user.email || "" },
+      });
       setErrorText("");
       actions.resetForm();
       navigate("/", { replace: true });

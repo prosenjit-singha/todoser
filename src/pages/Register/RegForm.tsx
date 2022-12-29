@@ -21,6 +21,7 @@ import LogInWithGoogleButton from "../../components/LogInWithGoogleButton";
 import { useAuth } from "../../contexts/AuthContext";
 import { updateProfile } from "firebase/auth";
 import AuthAlert from "../../components/AuthAlert";
+import { getAccessToken } from "../../api/jwtHandler";
 
 const initialValues = {
   fullName: "",
@@ -57,6 +58,12 @@ function RegForm() {
     setIsLoading(true);
     try {
       const { user } = await register({ email: v.email, password: v.password });
+      await getAccessToken({
+        payload: {
+          uid: user.uid,
+          email: user.email || "",
+        },
+      });
       await updateProfile(user, { displayName: v.fullName });
       actions.resetForm();
       setErrorText("");

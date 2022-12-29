@@ -53,7 +53,7 @@ function Navbar() {
 
   function handleLogOutClick() {
     logOut()
-      .then(() => {})
+      .then(() => localStorage.removeItem("access-token"))
       .catch((err) => console.error(err));
   }
 
