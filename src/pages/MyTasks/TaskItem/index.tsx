@@ -18,6 +18,7 @@ import { FiEdit as EditIcon } from "react-icons/fi";
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import { useTasks } from "../../../contexts/TasksProvider";
+import { toast } from "react-toastify";
 
 type PropsType = {
   index: number;
@@ -34,7 +35,8 @@ function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
   const [enableEdit, setEnableEdit] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(menuAnchor);
-  const { updateTask } = useTasks();
+  const { updateTask, deleteTask } = useTasks();
+
   const closeMenu = () => {
     setMenuAnchor(null);
     setCurrentTask(null);
@@ -57,6 +59,12 @@ function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
   function handleCompleted() {
     const updatedTask: TaskType = { ...task, isCompleted: true };
     setTimeout(() => updateTask(index, updatedTask), 350);
+  }
+
+  function handleDeleteTask() {
+    deleteTask(index);
+    toast.success("Task Deleted!");
+    closeMenu();
   }
 
   return (
@@ -103,7 +111,7 @@ function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
           </ListItemIcon>
           <ListItemText>Edit Task</ListItemText>
         </MenuItem>
-        <MenuItem onClick={closeMenu}>
+        <MenuItem onClick={handleDeleteTask}>
           <ListItemIcon>
             <DeleteIcon size="1.25em" />
           </ListItemIcon>

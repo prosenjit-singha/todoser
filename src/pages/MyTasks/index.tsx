@@ -47,7 +47,13 @@ function MyTasks() {
           )}
         </List>
       </Paper>
-      <EditModal open={!!taskToBeUpdated} onClose={handleTaskModalClose} />
+      {taskToBeUpdated && (
+        <EditModal
+          data={taskToBeUpdated}
+          open={!!taskToBeUpdated}
+          onClose={handleTaskModalClose}
+        />
+      )}
     </Main>
   );
 }

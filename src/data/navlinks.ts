@@ -14,7 +14,7 @@ type NavLinkType = {
 const navlinks: NavLinkType[] = [
   {
     name: "Add Task",
-    path: "/",
+    path: "/add-task",
     Icon: AddIcon,
   },
   {

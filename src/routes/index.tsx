@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "../layouts/Root";
 import AddTask from "../pages/AddTask";
 import CompletedTasks from "../pages/CompletedTasks";
+import Home from "../pages/Home";
 import Login from "../pages/Login";
 import MyTasks from "../pages/MyTasks";
 import Register from "../pages/Register";
@@ -12,11 +13,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <AddTask />,
+        element: <Home />,
       },
       {
         path: "/add-task",
-        loader: () => redirect("/"),
+        element: <AddTask />,
       },
       {
         path: "my-tasks",

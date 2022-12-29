@@ -1,7 +1,7 @@
 type TaskType = {
   isCompleted: boolean;
   title: string;
-  desc: string;
+  details: string;
   labels: string[];
   comment: string;
   images: {

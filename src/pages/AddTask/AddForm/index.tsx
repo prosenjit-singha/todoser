@@ -15,12 +15,14 @@ import {
   Alert,
   Typography,
   Box,
+  Button,
 } from "@mui/material";
 import {
   MdAdd,
   MdClose,
   MdOutlineNewLabel as AddLabelIcon,
 } from "react-icons/md";
+import { HiPlus } from "react-icons/hi";
 import { CgUndo as UndoIcon } from "react-icons/cg";
 import { BiImageAdd as AddImageIcon } from "react-icons/bi";
 import { useTasks } from "../../../contexts/TasksProvider";
@@ -90,10 +92,10 @@ function AddForm() {
   ) {
     addTask({
       title: v.title,
-      desc: v.desc,
-      labels: [],
+      details: v.desc,
+      labels: v.labels,
       isCompleted: false,
-      images: [],
+      images: v.images,
       comment: "",
     });
     toast.success(<Success onUndo={() => deleteTask(0)} />, {
@@ -185,7 +187,11 @@ function AddForm() {
                 ))}
               </Stack>
               {/* Action buttons */}
-              <Stack direction="row" spacing={1}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{ width: "100%", alignItems: "center" }}
+              >
                 <Tooltip title="Add label" describeChild>
                   <IconButton
                     disabled={isUploading}
@@ -195,7 +201,7 @@ function AddForm() {
                     <AddLabelIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Add Image" describeChild>
+                <Tooltip title="Upload Image" describeChild>
                   <IconButton
                     component="label"
                     sx={{ color: "text.secondary" }}
@@ -215,6 +221,14 @@ function AddForm() {
                     />
                   </IconButton>
                 </Tooltip>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{ ml: "auto !important", height: "fit-content" }}
+                  startIcon={<HiPlus />}
+                >
+                  Add Task
+                </Button>
               </Stack>
               <input type="submit" hidden />
             </form>

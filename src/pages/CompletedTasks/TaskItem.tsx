@@ -18,6 +18,7 @@ import { BiCommentCheck as CheckIcon } from "react-icons/bi";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
 import TaskType from "../../types/task.type";
 import { useTasks } from "../../contexts/TasksProvider";
+import { toast } from "react-toastify";
 
 type PropsType = {
   task: TaskType;
@@ -44,6 +45,7 @@ function TaskItem({ task, index }: PropsType) {
 
   function handleDeleteClick() {
     deleteTask(index);
+    toast.success("Task deleted!");
   }
 
   return (

@@ -8,12 +8,12 @@ import TasksProvider from "./contexts/TasksProvider";
 import AuthProvider from "./contexts/AuthContext";
 
 function App() {
-  const { theme } = useThemeToggler();
+  const { theme, mode } = useThemeToggler();
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
       <GlobalStyles styles={(p) => globalStyles(p)} />
-      <ToastContainer />
+      <ToastContainer position="top-center" autoClose={3000} theme={mode} />
       <AuthProvider>
         <TasksProvider>
           <RouterProvider router={router} />
