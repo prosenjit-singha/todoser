@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   ListItem,
   ListItemText,
@@ -12,9 +12,7 @@ import {
   CircularProgress,
   Divider,
   Chip,
-  Alert,
   Typography,
-  Box,
   Button,
 } from "@mui/material";
 import {
@@ -37,17 +35,18 @@ import { toast } from "react-toastify";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import updateTaskToServer from "../../../api/updateTask";
 import { useAuth } from "../../../contexts/AuthContext";
-import useTasks from "../../../hooks/useTasks";
+import useTasks, { useAddTask } from "../../../hooks/useTasks";
 // import { useTasks } from "../../../contexts/TasksProvider";
 
 const initialValues = {
   title: "",
-  desc: "",
+  details: "",
   labels: [],
   images: [],
 };
 
 function AddForm() {
+  const toastId = useRef("");
   const { mode } = useThemeToggler();
   const [open, setOpen] = useState(false);
   const [openToast, setOpenToast] = useState(false);
@@ -69,6 +68,7 @@ function AddForm() {
     onSubmit,
     validationSchema: addTaskSchema,
   });
+  const { mutate } = useAddTask();
   // const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -98,25 +98,27 @@ function AddForm() {
   ) {
     const newTask = {
       title: v.title,
-      details: v.desc,
+      details: v.details,
       labels: v.labels,
       isCompleted: false,
       images: v.images,
       comment: "",
     };
 
-    toast.promise(
-      updateTaskToServer({
-        uid: user?.uid || "",
-        email: user?.email || "",
-        tasks: [newTask, ...data],
-      }).then(() => refetch()),
-      {
-        pending: "Adding...",
-        success: "Task added!",
-        error: "An error occur while adding the task",
-      }
-    );
+    mutate({ uid: (user && user.uid) || "", newTask, tasks: data });
+
+    // toast.promise(
+    //   updateTaskToServer({
+    //     uid: user?.uid || "",
+    //     email: user?.email || "",
+    //     tasks: [newTask, ...data],
+    //   }).then(() => refetch()),
+    //   {
+    //     pending: "Adding...",
+    //     success: "Task added!",
+    //     error: "An error occur while adding the task",
+    //   }
+    // );
 
     // addTask(newTask);
     // toast.success(<Success onUndo={() => deleteTask(0)} />, {
@@ -147,8 +149,6 @@ function AddForm() {
       values.labels.filter((label) => label !== name)
     );
   }
-
-  // console.info(data);
 
   return (
     <>
@@ -185,8 +185,8 @@ function AddForm() {
                 autoComplete="off"
               />
               <InputBase
-                name="desc"
-                value={values.desc}
+                name="details"
+                value={values.details}
                 onChange={handleChange}
                 size="small"
                 placeholder="Details"

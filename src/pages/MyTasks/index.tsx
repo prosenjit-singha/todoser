@@ -2,12 +2,18 @@ import { useState } from "react";
 import { Main } from "../../components/styled";
 import { Paper, Typography, List } from "@mui/material";
 import TaskItem from "./TaskItem";
-import { useTasks } from "../../contexts/TasksProvider";
 import EditModal from "./EditModal";
 import TaskType from "../../types/task.type";
+import useTasks from "../../hooks/useTasks";
+import { useAuth } from "../../contexts/AuthContext";
+// import { useTasks } from "../../contexts/TasksProvider";
 
 function MyTasks() {
-  const { tasks } = useTasks();
+  // const { tasks } = useTasks();
+  const { user } = useAuth();
+  const { data: tasks = [], refetch } = useTasks(
+    user && user.uid ? user.uid : ""
+  );
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<{
     index: number;
     task: TaskType;
@@ -38,10 +44,13 @@ function MyTasks() {
             (task, i) =>
               !task.isCompleted && (
                 <TaskItem
+                  user={user}
                   openUpdateTaskModal={openUpdateTaskModal}
                   task={task}
                   key={i}
                   index={i}
+                  tasks={tasks}
+                  refetch={refetch}
                 />
               )
           )}

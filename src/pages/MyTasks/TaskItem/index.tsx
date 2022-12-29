@@ -17,16 +17,36 @@ import { BsThreeDotsVertical as ThreeDotsVertical } from "react-icons/bs";
 import { FiEdit as EditIcon } from "react-icons/fi";
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
-import { useTasks } from "../../../contexts/TasksProvider";
 import { toast } from "react-toastify";
+import useTasks from "../../../hooks/useTasks";
+import { User } from "firebase/auth";
+import updateTaskToServer from "../../../api/updateTask";
+import {
+  RefetchOptions,
+  RefetchQueryFilters,
+  QueryObserverResult,
+} from "@tanstack/react-query";
+// import { useTasks } from "../../../contexts/TasksProvider";
 
 type PropsType = {
+  user: User | null;
   index: number;
   task: TaskType;
+  tasks: TaskType[];
   openUpdateTaskModal: (data: { index: number; task: TaskType }) => void;
+  refetch: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
+  ) => Promise<QueryObserverResult<TaskType[], unknown>>;
 };
 
-function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
+function TaskItem({
+  task,
+  tasks,
+  openUpdateTaskModal,
+  index,
+  user,
+  refetch,
+}: PropsType) {
   const [currentTask, setCurrentTask] = useState<{
     index: number;
     task: TaskType;
@@ -35,7 +55,8 @@ function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
   const [enableEdit, setEnableEdit] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(menuAnchor);
-  const { updateTask, deleteTask } = useTasks();
+  // const { updateTask, deleteTask } = useTasks();
+  // const {refetch, data=[]} = useTasks(user && user.uid ? user.uid : "" );
 
   const closeMenu = () => {
     setMenuAnchor(null);
@@ -58,13 +79,24 @@ function TaskItem({ task, openUpdateTaskModal, index }: PropsType) {
 
   function handleCompleted() {
     const updatedTask: TaskType = { ...task, isCompleted: true };
-    setTimeout(() => updateTask(index, updatedTask), 350);
+    // setTimeout(() => updateTask(index, updatedTask), 350);
   }
 
   function handleDeleteTask() {
-    deleteTask(index);
-    toast.success("Task Deleted!");
+    // deleteTask(index);
     closeMenu();
+    toast.promise(
+      updateTaskToServer({
+        uid: user && user.uid ? user.uid : "",
+        email: user?.email || "",
+        tasks: tasks.filter((task, i) => i !== index),
+      }).then(() => refetch()),
+      {
+        pending: "Deleting task...",
+        success: "Task Deleted!",
+        error: "An error occur while deleting!",
+      }
+    );
   }
 
   return (
