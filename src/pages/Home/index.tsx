@@ -3,10 +3,17 @@ import React from "react";
 import { Main } from "../../components/styled";
 import logo from "../../assets/svgs/logo.svg";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import Loading from "../../components/Loading";
 
 function Home() {
   const { mode } = useThemeToggler();
+  const { user, loading } = useAuth();
+
+  if (!loading) return <Loading />;
+  if (user && user.uid) return <Navigate to="/add-task" replace />;
+
   return (
     <Main sx={{ p: [2, 3] }}>
       <Stack sx={{ minHeight: "calc(100vh - 56px)" }}>
