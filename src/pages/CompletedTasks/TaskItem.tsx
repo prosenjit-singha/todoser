@@ -9,17 +9,28 @@ import {
   Collapse,
   TextField,
 } from "@mui/material";
+import { useRef, useState } from "react";
 import {
   MdOutlineDeleteForever as DeleteIcon,
   MdOutlineComment as CommentIcon,
 } from "react-icons/md";
+import { BiCommentCheck as CheckIcon } from "react-icons/bi";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
 
 function TaskItem() {
   const { mode, theme } = useThemeToggler();
+  const [openComment, setOpenComment] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  async function handleClick() {
+    setOpenComment((prev) => !prev);
+    setTimeout(() => inputRef.current?.focus(), 100);
+  }
+
   return (
     <ListItem
       sx={{
+        alignItems: "flex-start",
         borderRadius: 0.5,
         ".MuiIconButton-root": {
           color: "text.secondary",
@@ -44,13 +55,27 @@ function TaskItem() {
         <Typography variant="h6" component="p">
           Task 1
         </Typography>
-        <Collapse in component="form">
-          <TextField label="Comment" variant="standard" fullWidth />
+        <Collapse in={openComment} component="form">
+          <TextField
+            inputRef={inputRef}
+            label="Comment"
+            variant="standard"
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <Tooltip title="Save">
+                  <IconButton>
+                    <CheckIcon />
+                  </IconButton>
+                </Tooltip>
+              ),
+            }}
+          />
         </Collapse>
       </ListItemText>
 
       {/* Side Icons */}
-      <Tooltip title="Comment" describeChild>
+      <Tooltip title="Add Comment" onClick={handleClick} describeChild>
         <IconButton sx={{ visibility: "hidden" }}>
           <CommentIcon />
         </IconButton>
