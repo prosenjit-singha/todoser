@@ -2,6 +2,7 @@ import { Main } from "../../components/styled";
 import { Paper, Typography, List } from "@mui/material";
 import TaskItem from "./TaskItem";
 import { useTasks } from "../../contexts/TasksProvider";
+import EditModal from "./EditModal";
 
 function MyTasks() {
   const { tasks } = useTasks();
@@ -23,6 +24,7 @@ function MyTasks() {
           ))}
         </List>
       </Paper>
+      <EditModal />
     </Main>
   );
 }
