@@ -110,6 +110,7 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
         sx={{
           p: 1,
           borderRadius: 0.5,
+          flexDirection: "column",
           alignItems: "flex-start",
           ":hover": {
             bgcolor: mode === "dark" ? colors.grey[900] : colors.grey[100],
@@ -120,18 +121,39 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
           },
         }}
       >
-        <Tooltip title="Mark as completed" describeChild>
-          <Checkbox onChange={handleCompleted} sx={{ mr: 2, mb: "auto" }} />
-        </Tooltip>
-        {/* middle section */}
-        <Stack
-          onClick={() => setViewDetails(true)}
-          sx={{ cursor: viewDetails ? "auto" : "pointer", width: "100%" }}
+        <Stack direction="row" width="100%">
+          <Tooltip title="Mark as completed" describeChild>
+            <Checkbox onChange={handleCompleted} sx={{ mr: 2, mb: "auto" }} />
+          </Tooltip>
+          {/* middle section */}
+          <Stack
+            onClick={() => setViewDetails(true)}
+            sx={{ cursor: viewDetails ? "auto" : "pointer", width: "100%" }}
+          >
+            <Typography variant="h6" sx={{ mt: 0.5 }}>
+              {task.title}
+            </Typography>
+          </Stack>
+          {/* side buttons */}
+          <Stack sx={{ ml: "auto", height: "100%" }}>
+            <IconButton
+              sx={{ visibility: "hidden", mb: "auto" }}
+              onClick={(e) => handleOpenMenu(e, index, task)}
+            >
+              <ThreeDotsVertical />
+            </IconButton>
+          </Stack>
+        </Stack>
+        <Collapse
+          in={viewDetails}
+          sx={{
+            width: "100%",
+            ".MuiCollapse-wrapperInner": {
+              display: "flex",
+            },
+          }}
         >
-          <Typography variant="h6" sx={{ mt: 0.5 }}>
-            {task.title}
-          </Typography>
-          <Collapse in={viewDetails}>
+          <Stack width="100%" sx={{ ml: 7.5 }}>
             <Typography>{task.details}</Typography>
             <Stack direction="row" sx={{ gap: 1, my: 1 }}>
               {task.labels.map((label, i) => (
@@ -142,23 +164,19 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
               <AvatarGroup sx={{ my: 1, width: "fit-content" }}>
                 {task.images.map((image, i) => (
                   <PhotoView src={image.url} key={i}>
-                    <Avatar src={image.url} alt={image.title} />
+                    <Avatar
+                      src={image.url}
+                      alt={image.title}
+                      sx={{ cursor: "pointer" }}
+                    />
                   </PhotoView>
                 ))}
               </AvatarGroup>
             </PhotoProvider>
-          </Collapse>
-        </Stack>
-        {/* side buttons */}
-        <Stack sx={{ ml: "auto", height: "100%" }}>
-          <IconButton
-            sx={{ visibility: "hidden", mb: "auto" }}
-            onClick={(e) => handleOpenMenu(e, index, task)}
-          >
-            <ThreeDotsVertical />
-          </IconButton>
+          </Stack>
           <IconButton
             sx={{
+              height: "fit-content",
               visibility: "hidden",
               display: viewDetails ? "flex" : "none",
             }}
@@ -166,7 +184,7 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
           >
             <DetailsUpIcon />
           </IconButton>
-        </Stack>
+        </Collapse>
       </ListItem>
       {/* <Divider /> */}
       <Menu

@@ -14,7 +14,9 @@ function Footer() {
       }}
     >
       <Logo />
-      <Typography variant="body2">Mady with ❤️ by Prosenjit Singha</Typography>
+      <Typography variant="body2" sx={{ mt: 1 }}>
+        Mady with ❤️ by Prosenjit Singha
+      </Typography>
     </Stack>
   );
 }

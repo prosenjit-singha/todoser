@@ -33,9 +33,8 @@ import AddLabelModal from "./AddLabelModal";
 import Toast from "./Toast";
 import { toast } from "react-toastify";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
-import updateTaskToServer from "../../../api/updateTask";
-import { useAuth } from "../../../contexts/AuthContext";
 import useTasks, { useMutateTasks } from "../../../hooks/useTasks";
+import { useRecentTasks } from "../../../contexts/TasksProvider";
 // import { useTasks } from "../../../contexts/TasksProvider";
 
 const initialValues = {
@@ -46,31 +45,20 @@ const initialValues = {
 };
 
 function AddForm() {
-  const toastId = useRef("");
-  const { mode } = useThemeToggler();
   const [open, setOpen] = useState(false);
   const [openToast, setOpenToast] = useState(false);
   const [openAddLabel, setOpenAddLabel] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const { user } = useAuth();
+  const { addTask } = useRecentTasks();
 
-  const { data = [], refetch } = useTasks();
-  const {
-    values,
-    errors,
-    handleSubmit,
-    handleBlur,
-    handleChange,
-    touched,
-    setFieldValue,
-  } = useFormik({
+  const { data = [] } = useTasks();
+  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues,
     onSubmit,
     validationSchema: addTaskSchema,
   });
   const { mutateAsync: mutateTaskAsync, isLoading: isAdding } =
     useMutateTasks();
-  // const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     try {
@@ -104,13 +92,12 @@ function AddForm() {
       images: v.images,
       comment: "",
     };
-
     toast.promise(
       mutateTaskAsync({
         newTask,
         tasks: data,
         operation: "add",
-      }),
+      }).then(() => addTask(newTask)),
       {
         pending: "Adding task...",
         success: "Task added!",
@@ -162,6 +149,7 @@ function AddForm() {
                 fullWidth
                 autoComplete="off"
                 disabled={isAdding}
+                required
               />
               <InputBase
                 name="details"

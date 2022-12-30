@@ -1,13 +1,12 @@
 import { Divider, List, Paper, Typography, lighten } from "@mui/material";
-import Loading from "../../components/Loading";
 import { Main } from "../../components/styled";
 import useTasks from "../../hooks/useTasks";
+import TaskItemSkeleton from "../MyTasks/TaskItemSkeleton";
 import TaskItem from "./TaskItem";
-// import { useTasks } from "../../contexts/TasksProvider";
 
 function CompletedTasks() {
   const { data: tasks = [], isLoading } = useTasks();
-  if (isLoading) return <Loading />;
+
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper
@@ -25,6 +24,8 @@ function CompletedTasks() {
         <Divider sx={{ my: 2 }} />
         <List>
           {/* <TaskItem /> */}
+          {isLoading &&
+            [1, 2, 3, 4, 5].map((i) => <TaskItemSkeleton key={i} />)}
           {tasks.map(
             (task, i) =>
               task.isCompleted && (

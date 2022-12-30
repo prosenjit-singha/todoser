@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Divider,
 } from "@mui/material";
 import { AiOutlineFieldTime as RecentIcon } from "react-icons/ai";
 import { Main } from "../../components/styled";
@@ -12,10 +13,11 @@ import TaskItem from "./TaskItem";
 import AddForm from "./AddForm";
 import useTasks from "../../hooks/useTasks";
 import Loading from "../../components/Loading";
+import { useRecentTasks } from "../../contexts/TasksProvider";
 
 function AddTask() {
   const { data: tasks = [], isLoading } = useTasks();
-
+  const { tasks: recentTasks } = useRecentTasks();
   if (isLoading) return <Loading />;
   return (
     <Main sx={{ p: [0, 2, 3] }}>
@@ -34,6 +36,7 @@ function AddTask() {
       >
         <List>
           <AddForm />
+          <Divider />
           <ListItem sx={{ color: "text.secondary" }}>
             <ListItemIcon
               sx={{ minWidth: "fit-content", color: "text.secondary" }}
@@ -42,7 +45,8 @@ function AddTask() {
             </ListItemIcon>
             <ListItemText sx={{ ml: 3 }}>Recently Added task</ListItemText>
           </ListItem>
-          {tasks.slice(0, 3).map((task, i) => (
+
+          {recentTasks.map((task, i) => (
             <TaskItem tasks={tasks} index={i} key={i} task={task} />
           ))}
         </List>

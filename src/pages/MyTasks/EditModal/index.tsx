@@ -106,6 +106,7 @@ function EditModal({ open, onClose, data }: PropsType) {
             size="small"
             label="Title"
             defaultValue={task.title}
+            required
           />
           <TextField
             inputRef={detailsRef}

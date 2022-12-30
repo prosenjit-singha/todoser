@@ -6,7 +6,7 @@ import EditModal from "./EditModal";
 import TaskType from "../../types/task.type";
 import useTasks from "../../hooks/useTasks";
 import { useAuth } from "../../contexts/AuthContext";
-import Loading from "../../components/Loading";
+import TaskItemSkeleton from "./TaskItemSkeleton";
 
 function MyTasks() {
   // const { tasks } = useTasks();
@@ -24,7 +24,7 @@ function MyTasks() {
   function handleTaskModalClose() {
     setTaskToBeUpdated(null);
   }
-  if (isLoading) return <Loading />;
+
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper
@@ -42,6 +42,8 @@ function MyTasks() {
         <Divider sx={{ my: 2 }} />
 
         <List>
+          {isLoading &&
+            [1, 2, 3, 4, 5].map((i) => <TaskItemSkeleton key={i} />)}
           {tasks.map(
             (task, i) =>
               !task.isCompleted && (

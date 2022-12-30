@@ -11,6 +11,7 @@ import { CgUndo } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { useMutateTasks } from "../../hooks/useTasks";
 import { toast } from "react-toastify";
+import { useRecentTasks } from "../../contexts/TasksProvider";
 
 type PropsType = {
   task: TaskType;
@@ -20,6 +21,7 @@ type PropsType = {
 
 function TaskItem({ task, index, tasks }: PropsType) {
   const navigate = useNavigate();
+  const { deleteTask } = useRecentTasks();
   const { mutateAsync: mutateTask } = useMutateTasks();
 
   function handleUndo() {
@@ -28,7 +30,7 @@ function TaskItem({ task, index, tasks }: PropsType) {
         operation: "delete",
         index,
         tasks,
-      }),
+      }).then(() => deleteTask(index)),
       {
         pending: "Removing task...",
         success: "Task removed!",

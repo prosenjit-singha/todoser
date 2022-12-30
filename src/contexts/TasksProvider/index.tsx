@@ -10,7 +10,7 @@ type ValueType = {
 
 const TasksContext = createContext<ValueType>({} as ValueType);
 
-const TasksProvider = ({ children }: { children: React.ReactNode }) => {
+const RecentTaskProvider = ({ children }: { children: React.ReactNode }) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
   function addTask(task: TaskType) {
@@ -37,6 +37,6 @@ const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default TasksProvider;
+export default RecentTaskProvider;
 
-export const useTasks = () => useContext(TasksContext);
+export const useRecentTasks = () => useContext(TasksContext);
