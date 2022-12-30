@@ -5,6 +5,7 @@ import { ThemeTogglerProvider } from "./contexts/ThemeToggler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "react-toastify/dist/ReactToastify.css";
+import "react-photo-view/dist/react-photo-view.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

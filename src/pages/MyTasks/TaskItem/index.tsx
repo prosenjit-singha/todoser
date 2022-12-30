@@ -10,6 +10,10 @@ import {
   ListItemText,
   colors,
   Tooltip,
+  Collapse,
+  Chip,
+  Avatar,
+  AvatarGroup,
 } from "@mui/material";
 import { useState } from "react";
 import TaskType from "../../../types/task.type";
@@ -20,11 +24,7 @@ import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import { toast } from "react-toastify";
 import { useMutateTasks } from "../../../hooks/useTasks";
 import { User } from "firebase/auth";
-import {
-  RefetchOptions,
-  RefetchQueryFilters,
-  QueryObserverResult,
-} from "@tanstack/react-query";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
 type PropsType = {
   user: User | null;
@@ -43,9 +43,7 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
   const [enableEdit, setEnableEdit] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(menuAnchor);
-  // const { updateTask, deleteTask } = useTasks();
   const { mutateAsync: mutateTask } = useMutateTasks();
-  // const {refetch, data=[]} = useTasks(user && user.uid ? user.uid : "" );
 
   const closeMenu = () => {
     setMenuAnchor(null);
@@ -125,8 +123,24 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
           <Checkbox onChange={handleCompleted} sx={{ mr: 2, mb: "auto" }} />
         </Tooltip>
         <Stack>
-          <Typography sx={{ fontSize: 16 }}>{task.title}</Typography>
-          <Typography>{task.details}</Typography>
+          <Typography variant="h6">{task.title}</Typography>
+          <Collapse in>
+            <Typography>{task.details}</Typography>
+            <Stack direction="row" sx={{ gap: 1, my: 1 }}>
+              {task.labels.map((label, i) => (
+                <Chip label={label} key={i} size="small" />
+              ))}
+            </Stack>
+            <PhotoProvider>
+              <AvatarGroup sx={{ my: 1, width: "fit-content" }}>
+                {task.images.map((image, i) => (
+                  <PhotoView src={image.url} key={i}>
+                    <Avatar src={image.url} alt={image.title} />
+                  </PhotoView>
+                ))}
+              </AvatarGroup>
+            </PhotoProvider>
+          </Collapse>
         </Stack>
         <IconButton
           sx={{ ml: "auto", visibility: "hidden" }}

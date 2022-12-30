@@ -154,7 +154,7 @@ function RegForm() {
         />
         <Typography textAlign="center">
           Don't have an account?{" "}
-          <Button component={Link} to="/register">
+          <Button component={Link} to="/register" disabled={isSubmitting}>
             Register Here
           </Button>
         </Typography>

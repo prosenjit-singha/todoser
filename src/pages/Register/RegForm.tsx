@@ -143,7 +143,6 @@ function RegForm() {
               : undefined
           }
           type={showPass ? "text" : "password"}
-          placeholder="password"
           label="Password"
           size="small"
           fullWidth
@@ -176,7 +175,6 @@ function RegForm() {
           }
           label="Confirm Password"
           type={showPass ? "text" : "password"}
-          placeholder="password"
           size="small"
           fullWidth
           InputProps={{
@@ -209,7 +207,7 @@ function RegForm() {
         />
         <Typography textAlign="center">
           Have an account?{" "}
-          <Button component={Link} to="/login">
+          <Button component={Link} to="/login" disabled={isSubmitting}>
             Login Here
           </Button>
         </Typography>
