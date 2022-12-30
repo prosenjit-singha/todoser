@@ -18,7 +18,7 @@ import { FiEdit as EditIcon } from "react-icons/fi";
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import { toast } from "react-toastify";
-import useTasks from "../../../hooks/useTasks";
+import useTasks, { useMutateTasks } from "../../../hooks/useTasks";
 import { User } from "firebase/auth";
 import updateTaskToServer from "../../../api/updateTask";
 import {
@@ -56,6 +56,7 @@ function TaskItem({
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(menuAnchor);
   // const { updateTask, deleteTask } = useTasks();
+  const { mutateAsync: mutateTask } = useMutateTasks();
   // const {refetch, data=[]} = useTasks(user && user.uid ? user.uid : "" );
 
   const closeMenu = () => {
@@ -83,18 +84,20 @@ function TaskItem({
   }
 
   function handleDeleteTask() {
-    // deleteTask(index);
     closeMenu();
     toast.promise(
-      updateTaskToServer({
-        uid: user && user.uid ? user.uid : "",
-        email: user?.email || "",
-        tasks: tasks.filter((task, i) => i !== index),
-      }).then(() => refetch()),
+      mutateTask({
+        operation: "delete",
+        index,
+        tasks,
+      }),
       {
         pending: "Deleting task...",
         success: "Task Deleted!",
         error: "An error occur while deleting!",
+      },
+      {
+        autoClose: 3000,
       }
     );
   }

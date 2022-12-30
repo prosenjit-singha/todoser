@@ -47,7 +47,7 @@ function TaskItem({ task, index, tasks }: PropsType) {
   }
 
   function handleDeleteClick() {
-    deleteTask(index);
+    // deleteTask(index);
     mutateTask({
       tasks,
       index,
