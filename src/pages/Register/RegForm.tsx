@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Paper,
   Typography,
@@ -207,6 +207,12 @@ function RegForm() {
           setSubmitting={setSubmitting}
           label="Register With Google"
         />
+        <Typography textAlign="center">
+          Have an account?{" "}
+          <Button component={Link} to="/login">
+            Login Here
+          </Button>
+        </Typography>
       </Stack>
     </Paper>
   );

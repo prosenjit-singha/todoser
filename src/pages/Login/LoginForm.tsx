@@ -19,7 +19,7 @@ import loginFormSchema from "../../schemas/loginForm.schema";
 import LogInWithGoogleButton from "../../components/LogInWithGoogleButton";
 import AuthAlert from "../../components/AuthAlert";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAccessToken } from "../../api/jwtHandler";
 
 const initialValues = {
@@ -152,6 +152,12 @@ function RegForm() {
           isSubmitting={isSubmitting}
           setSubmitting={setSubmitting}
         />
+        <Typography textAlign="center">
+          Don't have an account?{" "}
+          <Button component={Link} to="/register">
+            Register Here
+          </Button>
+        </Typography>
       </Stack>
     </Paper>
   );
