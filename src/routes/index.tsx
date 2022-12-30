@@ -5,6 +5,7 @@ import CompletedTasks from "../pages/CompletedTasks";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import MyTasks from "../pages/MyTasks";
+import PageNotFound from "../pages/PageNotFound";
 import Register from "../pages/Register";
 import PrivateRoute from "./PrivateRoute";
 export const router = createBrowserRouter([
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "*",
+        element: <PageNotFound />,
       },
     ],
   },

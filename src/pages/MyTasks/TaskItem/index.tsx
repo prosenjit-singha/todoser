@@ -130,6 +130,7 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
         </Tooltip>
         <Stack>
           <Typography sx={{ fontSize: 16 }}>{task.title}</Typography>
+          <Typography>{task.details}</Typography>
         </Stack>
         <IconButton
           sx={{ ml: "auto", visibility: "hidden" }}

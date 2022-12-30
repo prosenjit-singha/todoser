@@ -68,12 +68,12 @@ function AddForm() {
     onSubmit,
     validationSchema: addTaskSchema,
   });
-  const { mutateAsync: mutateTaskAsync } = useMutateTasks();
+  const { mutateAsync: mutateTaskAsync, isLoading: isAdding } =
+    useMutateTasks();
   // const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     try {
-      console.info(e);
       setIsUploading(true);
       if (e.target.files && e.target.files[0]) {
         const res = await uploadImage(e.target.files[0]);
@@ -161,6 +161,7 @@ function AddForm() {
                 placeholder="Task title"
                 fullWidth
                 autoComplete="off"
+                disabled={isAdding}
               />
               <InputBase
                 name="details"
@@ -170,7 +171,7 @@ function AddForm() {
                 placeholder="Details"
                 fullWidth
                 autoComplete="off"
-                // multiline
+                disabled={isAdding}
               />
               <Divider />
               <AttachedImages
@@ -184,6 +185,7 @@ function AddForm() {
                     label={label}
                     key={i}
                     onDelete={() => removeLabel(label)}
+                    disabled={isAdding}
                   />
                 ))}
               </Stack>
@@ -195,7 +197,7 @@ function AddForm() {
               >
                 <Tooltip title="Add label" describeChild>
                   <IconButton
-                    disabled={isUploading}
+                    disabled={isUploading || isAdding}
                     sx={{ color: "text.secondary" }}
                     onClick={() => setOpenAddLabel((prev) => !prev)}
                   >
@@ -206,7 +208,7 @@ function AddForm() {
                   <IconButton
                     component="label"
                     sx={{ color: "text.secondary" }}
-                    disabled={isUploading}
+                    disabled={isUploading || isAdding}
                   >
                     {isUploading ? (
                       <CircularProgress color="inherit" size="1em" />
@@ -223,6 +225,7 @@ function AddForm() {
                   </IconButton>
                 </Tooltip>
                 <Button
+                  disabled={isUploading || isAdding}
                   variant="outlined"
                   size="small"
                   sx={{ ml: "auto !important", height: "fit-content" }}

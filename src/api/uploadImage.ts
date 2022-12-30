@@ -12,8 +12,6 @@ const uploadImage = async (img: File) => {
     url: res.data?.image?.url,
     delete_url: res.data?.delete_url,
   };
-  console.info(res.data);
-  console.info(data);
   return data;
 };
 

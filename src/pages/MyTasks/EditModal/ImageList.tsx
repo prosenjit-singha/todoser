@@ -19,7 +19,10 @@ function ImageList({ images, handleDelete }: ImageListProps) {
   return (
     <>
       {!!images.length && <Typography>Images</Typography>}
-      <List disablePadding>
+      <List
+        disablePadding
+        sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+      >
         {images.map((image, i) => (
           <ListItem
             disablePadding
@@ -32,8 +35,9 @@ function ImageList({ images, handleDelete }: ImageListProps) {
             key={i}
           >
             <Avatar
-              src="https://thumbs.dreamstime.com/b/no-thumbnail-images-placeholder-forums-blogs-websites-148010338.jpg"
+              src={image.url}
               sx={{ height: 30, width: 30 }}
+              alt={image.title}
             />
             <Typography
               sx={{
