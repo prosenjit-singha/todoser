@@ -65,7 +65,6 @@ const useTasks = () => {
           authorization: `Bearer ${localStorage.getItem("access-token")}`,
         },
       });
-      console.info(data);
       return data ? data : [];
     },
 

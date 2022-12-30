@@ -68,7 +68,7 @@ function AddForm() {
     onSubmit,
     validationSchema: addTaskSchema,
   });
-  const { mutate } = useMutateTasks();
+  const { mutateAsync: mutateTaskAsync } = useMutateTasks();
   // const { addTask, deleteTask } = useTasks();
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -105,45 +105,19 @@ function AddForm() {
       comment: "",
     };
 
-    mutate({
-      newTask,
-      tasks: data,
-      operation: "add",
-    });
+    toast.promise(
+      mutateTaskAsync({
+        newTask,
+        tasks: data,
+        operation: "add",
+      }),
+      {
+        pending: "Adding task...",
+        success: "Task added!",
+        error: "An error occur while adding the task!",
+      }
+    );
 
-    // toast.promise(
-    //   updateTaskToServer({
-    //     uid: user?.uid || "",
-    //     email: user?.email || "",
-    //     tasks: [newTask, ...data],
-    //   }).then(() => refetch()),
-    //   {
-    //     pending: "Adding...",
-    //     success: "Task added!",
-    //     error: "An error occur while adding the task",
-    //   }
-    // );
-
-    // addTask(newTask);
-    // toast.success(<Success onUndo={() => deleteTask(0)} />, {
-    //   theme: mode,
-    //   position: "top-center",
-    //   autoClose: 3000,
-    //   closeButton: () => (
-    //     <Tooltip title="Close Toast" describeChild>
-    //       <IconButton
-    //         sx={{
-    //           display: "flex",
-    //           height: "fit-content",
-    //           width: "fit-content",
-    //           mx: "auto",
-    //         }}
-    //       >
-    //         <MdClose />
-    //       </IconButton>
-    //     </Tooltip>
-    //   ),
-    // });
     actions.resetForm();
   }
 

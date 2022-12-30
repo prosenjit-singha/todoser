@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Main } from "../../components/styled";
-import { Paper, Typography, List } from "@mui/material";
+import { Paper, Typography, List, Divider, lighten } from "@mui/material";
 import TaskItem from "./TaskItem";
 import EditModal from "./EditModal";
 import TaskType from "../../types/task.type";
 import useTasks from "../../hooks/useTasks";
 import { useAuth } from "../../contexts/AuthContext";
-// import { useTasks } from "../../contexts/TasksProvider";
 
 function MyTasks() {
   // const { tasks } = useTasks();
@@ -28,15 +27,19 @@ function MyTasks() {
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper
-        sx={({ shadows }) => ({
+        elevation={0}
+        sx={({ shadows, palette }) => ({
           my: [2, 3],
           p: 2,
           boxShadow: ["none", shadows[5], shadows[10]],
+          bgcolor: ["transparent", lighten(palette.background.paper, 0.035)],
         })}
       >
         <Typography variant="h5" component="h1" textAlign="center">
           My Task List
         </Typography>
+        <Divider sx={{ my: 2 }} />
+
         <List>
           {tasks.map(
             (task, i) =>

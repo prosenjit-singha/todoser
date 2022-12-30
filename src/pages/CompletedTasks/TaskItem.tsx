@@ -8,6 +8,7 @@ import {
   Typography,
   Collapse,
   TextField,
+  InputBase,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import {
@@ -17,7 +18,6 @@ import {
 import { BiCommentCheck as CheckIcon } from "react-icons/bi";
 import { useThemeToggler } from "../../contexts/ThemeToggler";
 import TaskType from "../../types/task.type";
-import { useTasks } from "../../contexts/TasksProvider";
 import { toast } from "react-toastify";
 import { useMutateTasks } from "../../hooks/useTasks";
 
@@ -47,11 +47,14 @@ function TaskItem({ task, index, tasks }: PropsType) {
           index,
           tasks,
           newTask: { ...task, comment },
-        }),
+        }).then(() => setOpenComment(false)),
         {
           pending: "Adding comment...",
           success: "Comment added!",
           error: "An error occur while adding comment!",
+        },
+        {
+          autoClose: 3000,
         }
       );
     }
@@ -122,14 +125,36 @@ function TaskItem({ task, index, tasks }: PropsType) {
           {task.title}
         </Typography>
         <Collapse
-          in={openComment}
+          in={!!task.comment || openComment}
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
             handleSaveComment();
           }}
         >
-          <TextField
+          <InputBase
+            inputRef={inputRef}
+            disabled={!openComment}
+            placeholder="Comment"
+            defaultValue={task.comment}
+            fullWidth
+            autoComplete="off"
+            endAdornment={
+              <Tooltip title="Save">
+                <IconButton
+                  onClick={handleSaveComment}
+                  sx={{
+                    visibility: `${
+                      openComment ? "visible" : "hidden"
+                    } !important`,
+                  }}
+                >
+                  <CheckIcon />
+                </IconButton>
+              </Tooltip>
+            }
+          />
+          {/* <TextField
             inputRef={inputRef}
             label="Comment"
             defaultValue={task.comment}
@@ -145,12 +170,15 @@ function TaskItem({ task, index, tasks }: PropsType) {
               ),
             }}
             autoComplete="off"
-          />
+          /> */}
         </Collapse>
       </ListItemText>
 
       {/* Side Icons */}
-      <Tooltip title="Add Comment" describeChild>
+      <Tooltip
+        title={task.comment ? "Edit Comment" : "Add Comment"}
+        describeChild
+      >
         <IconButton onClick={handleClick} sx={{ visibility: "hidden" }}>
           <CommentIcon />
         </IconButton>

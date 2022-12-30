@@ -11,14 +11,20 @@ import {
   Chip,
   IconButton,
   Tooltip,
+  Typography,
+  Badge,
+  List,
+  ListItem,
+  Avatar,
 } from "@mui/material";
 import { HiPlus } from "react-icons/hi";
-import TaskType from "../../types/task.type";
-import { useTasks } from "../../contexts/TasksProvider";
+import TaskType from "../../../types/task.type";
 import { toast } from "react-toastify";
-import { useMutateTasks } from "../../hooks/useTasks";
+import { useMutateTasks } from "../../../hooks/useTasks";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
+import { MdClose } from "react-icons/md";
+import ImageList from "./ImageList";
 
 type PropsType = {
   open: boolean;
@@ -78,6 +84,13 @@ function EditModal({ open, onClose, data }: PropsType) {
     }
   }
 
+  async function removeImage(index: number) {
+    setTask((prev) => ({
+      ...prev,
+      images: task.images.filter((_img, i) => i !== index),
+    }));
+  }
+
   return (
     <Dialog
       open={open}
@@ -135,6 +148,7 @@ function EditModal({ open, onClose, data }: PropsType) {
               />
             ))}
           </Stack>
+          <ImageList images={task.images} handleDelete={removeImage} />
         </Stack>
       </DialogContent>
 
