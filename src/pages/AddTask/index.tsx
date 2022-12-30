@@ -1,12 +1,22 @@
-import { List, Paper, lighten } from "@mui/material";
+import {
+  List,
+  Paper,
+  lighten,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { AiOutlineFieldTime as RecentIcon } from "react-icons/ai";
 import { Main } from "../../components/styled";
 import TaskItem from "./TaskItem";
 import AddForm from "./AddForm";
 import useTasks from "../../hooks/useTasks";
+import Loading from "../../components/Loading";
 
 function AddTask() {
-  const { data: tasks = [] } = useTasks();
+  const { data: tasks = [], isLoading } = useTasks();
 
+  if (isLoading) return <Loading />;
   return (
     <Main sx={{ p: [0, 2, 3] }}>
       <Paper
@@ -24,8 +34,16 @@ function AddTask() {
       >
         <List>
           <AddForm />
+          <ListItem sx={{ color: "text.secondary" }}>
+            <ListItemIcon
+              sx={{ minWidth: "fit-content", color: "text.secondary" }}
+            >
+              <RecentIcon size="1.5em" style={{ margin: 4, marginLeft: 10 }} />
+            </ListItemIcon>
+            <ListItemText sx={{ ml: 3 }}>Recently Added task</ListItemText>
+          </ListItem>
           {tasks.slice(0, 3).map((task, i) => (
-            <TaskItem key={i} task={task} />
+            <TaskItem tasks={tasks} index={i} key={i} task={task} />
           ))}
         </List>
       </Paper>

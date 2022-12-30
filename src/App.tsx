@@ -13,7 +13,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
       <GlobalStyles styles={(p) => globalStyles(p)} />
-      <ToastContainer position="top-center" autoClose={3000} theme={mode} />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        theme={mode}
+        closeOnClick
+      />
       <AuthProvider>
         <TasksProvider>
           <RouterProvider router={router} />

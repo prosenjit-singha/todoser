@@ -101,7 +101,11 @@ function Navbar() {
           onClick={handleAvatarClick}
           sx={{ display: !loading && !user?.uid ? "none" : "flex" }}
         >
-          <Avatar>{user && user.displayName && user.displayName[0]}</Avatar>
+          {!loading && user && (
+            <Avatar src={user?.photoURL || ""}>
+              {user && user.displayName && user.displayName[0]}
+            </Avatar>
+          )}
         </IconButton>
         {/* Toggle Menu */}
         <IconButton

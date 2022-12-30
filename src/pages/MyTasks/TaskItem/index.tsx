@@ -20,6 +20,7 @@ import TaskType from "../../../types/task.type";
 import { BsThreeDotsVertical as ThreeDotsVertical } from "react-icons/bs";
 import { FiEdit as EditIcon } from "react-icons/fi";
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md";
+import { RxDoubleArrowUp as DetailsUpIcon } from "react-icons/rx";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import { toast } from "react-toastify";
 import { useMutateTasks } from "../../../hooks/useTasks";
@@ -40,7 +41,7 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
     task: TaskType;
   } | null>(null);
   const { mode, theme } = useThemeToggler();
-  const [enableEdit, setEnableEdit] = useState(false);
+  const [viewDetails, setViewDetails] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(menuAnchor);
   const { mutateAsync: mutateTask } = useMutateTasks();
@@ -106,10 +107,10 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
   return (
     <>
       <ListItem
-        onClick={() => setEnableEdit(true)}
         sx={{
           p: 1,
           borderRadius: 0.5,
+          alignItems: "flex-start",
           ":hover": {
             bgcolor: mode === "dark" ? colors.grey[900] : colors.grey[100],
             outline: `1px solid ${theme.palette.divider}`,
@@ -122,9 +123,15 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
         <Tooltip title="Mark as completed" describeChild>
           <Checkbox onChange={handleCompleted} sx={{ mr: 2, mb: "auto" }} />
         </Tooltip>
-        <Stack>
-          <Typography variant="h6">{task.title}</Typography>
-          <Collapse in>
+        {/* middle section */}
+        <Stack
+          onClick={() => setViewDetails(true)}
+          sx={{ cursor: viewDetails ? "auto" : "pointer", width: "100%" }}
+        >
+          <Typography variant="h6" sx={{ mt: 0.5 }}>
+            {task.title}
+          </Typography>
+          <Collapse in={viewDetails}>
             <Typography>{task.details}</Typography>
             <Stack direction="row" sx={{ gap: 1, my: 1 }}>
               {task.labels.map((label, i) => (
@@ -142,12 +149,24 @@ function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
             </PhotoProvider>
           </Collapse>
         </Stack>
-        <IconButton
-          sx={{ ml: "auto", visibility: "hidden" }}
-          onClick={(e) => handleOpenMenu(e, index, task)}
-        >
-          <ThreeDotsVertical />
-        </IconButton>
+        {/* side buttons */}
+        <Stack sx={{ ml: "auto", height: "100%" }}>
+          <IconButton
+            sx={{ visibility: "hidden", mb: "auto" }}
+            onClick={(e) => handleOpenMenu(e, index, task)}
+          >
+            <ThreeDotsVertical />
+          </IconButton>
+          <IconButton
+            sx={{
+              visibility: "hidden",
+              display: viewDetails ? "flex" : "none",
+            }}
+            onClick={() => setViewDetails(false)}
+          >
+            <DetailsUpIcon />
+          </IconButton>
+        </Stack>
       </ListItem>
       {/* <Divider /> */}
       <Menu

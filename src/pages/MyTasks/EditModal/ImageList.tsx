@@ -23,47 +23,51 @@ function ImageList({ images, handleDelete }: ImageListProps) {
       <PhotoProvider>
         <List
           disablePadding
-          sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
         >
           {images.map((image, i) => (
-            <PhotoView src={image.url} key={i}>
-              <ListItem
-                disablePadding
-                sx={({ palette }) => ({
-                  borderRadius: 8.5,
-                  ":hover": {
-                    outline: `1px solid ${palette.divider}`,
-                  },
-                })}
-              >
+            <ListItem
+              disablePadding
+              sx={({ palette }) => ({
+                borderRadius: 8.5,
+                ":hover": {
+                  outline: `1px solid ${palette.divider}`,
+                },
+              })}
+            >
+              <PhotoView src={image.url} key={i}>
                 <Avatar
                   src={image.url}
-                  sx={{ height: 30, width: 30 }}
+                  sx={{ height: 30, width: 30, cursor: "pointer" }}
                   alt={image.title}
                 />
-                <Typography
-                  sx={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: "1",
-                    WebkitBoxOrient: "vertical",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    mx: 1,
-                  }}
+              </PhotoView>
+              <Typography
+                sx={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: "1",
+                  WebkitBoxOrient: "vertical",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  mx: 1,
+                }}
+              >
+                {image.title}
+              </Typography>
+              <Tooltip title="Delete image">
+                <IconButton
+                  onClick={() => handleDelete(i)}
+                  size="small"
+                  sx={{ ml: "auto" }}
                 >
-                  {image.title}
-                </Typography>
-                <Tooltip title="Delete image">
-                  <IconButton
-                    onClick={() => handleDelete(i)}
-                    size="small"
-                    sx={{ ml: "auto" }}
-                  >
-                    <MdClose />
-                  </IconButton>
-                </Tooltip>
-              </ListItem>
-            </PhotoView>
+                  <MdClose />
+                </IconButton>
+              </Tooltip>
+            </ListItem>
           ))}
         </List>
       </PhotoProvider>
