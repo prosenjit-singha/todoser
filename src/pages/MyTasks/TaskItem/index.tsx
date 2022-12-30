@@ -25,7 +25,6 @@ import {
   RefetchQueryFilters,
   QueryObserverResult,
 } from "@tanstack/react-query";
-// import { useTasks } from "../../../contexts/TasksProvider";
 
 type PropsType = {
   user: User | null;
@@ -33,9 +32,6 @@ type PropsType = {
   task: TaskType;
   tasks: TaskType[];
   openUpdateTaskModal: (data: { index: number; task: TaskType }) => void;
-  refetch: <TPageData>(
-    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
-  ) => Promise<QueryObserverResult<TaskType[], unknown>>;
 };
 
 function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {

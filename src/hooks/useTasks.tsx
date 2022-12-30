@@ -50,7 +50,11 @@ const updateTasks = async ({
   if (operation === "delete") payload = tasks.filter((_task, i) => i !== index);
   if (operation === "update" && newTask)
     payload = tasks.map((task, i) => (i === index ? newTask : task));
-  return await api.post(`/tasks?uid=${uid}`, payload);
+  return await api.post(`/tasks?uid=${uid}`, payload, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("access-token")}`,
+    },
+  });
 };
 
 const useTasks = () => {

@@ -1,11 +1,13 @@
 import { Divider, List, Paper, Typography, lighten } from "@mui/material";
+import Loading from "../../components/Loading";
 import { Main } from "../../components/styled";
 import useTasks from "../../hooks/useTasks";
 import TaskItem from "./TaskItem";
 // import { useTasks } from "../../contexts/TasksProvider";
 
 function CompletedTasks() {
-  const { data: tasks = [] } = useTasks();
+  const { data: tasks = [], isLoading } = useTasks();
+  if (isLoading) return <Loading />;
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper

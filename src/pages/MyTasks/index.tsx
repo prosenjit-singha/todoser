@@ -6,11 +6,12 @@ import EditModal from "./EditModal";
 import TaskType from "../../types/task.type";
 import useTasks from "../../hooks/useTasks";
 import { useAuth } from "../../contexts/AuthContext";
+import Loading from "../../components/Loading";
 
 function MyTasks() {
   // const { tasks } = useTasks();
   const { user } = useAuth();
-  const { data: tasks = [], refetch } = useTasks();
+  const { data: tasks = [], isLoading } = useTasks();
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<{
     index: number;
     task: TaskType;
@@ -23,7 +24,7 @@ function MyTasks() {
   function handleTaskModalClose() {
     setTaskToBeUpdated(null);
   }
-
+  if (isLoading) return <Loading />;
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper
@@ -51,7 +52,6 @@ function MyTasks() {
                   key={i}
                   index={i}
                   tasks={tasks}
-                  refetch={refetch}
                 />
               )
           )}
