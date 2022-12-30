@@ -28,11 +28,10 @@ type PropsType = {
 };
 
 function TaskItem({ task, index, tasks }: PropsType) {
-  const { updateTask, deleteTask } = useTasks();
   const { mode, theme } = useThemeToggler();
   const [openComment, setOpenComment] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { mutate: mutateTask } = useMutateTasks();
+  const { mutateAsync: mutateTask } = useMutateTasks();
 
   async function handleClick() {
     setOpenComment((prev) => !prev);
@@ -42,23 +41,57 @@ function TaskItem({ task, index, tasks }: PropsType) {
   function handleSaveComment() {
     if (inputRef.current) {
       const comment = inputRef.current.value;
-      updateTask(index, { ...task, comment });
+      toast.promise(
+        mutateTask({
+          operation: "update",
+          index,
+          tasks,
+          newTask: { ...task, comment },
+        }),
+        {
+          pending: "Adding comment...",
+          success: "Comment added!",
+          error: "An error occur while adding comment!",
+        }
+      );
     }
   }
 
   function handleDeleteClick() {
-    // deleteTask(index);
-    mutateTask({
-      tasks,
-      index,
-      operation: "delete",
-    });
-    toast.success("Task deleted!");
+    toast.promise(
+      mutateTask({
+        tasks,
+        index,
+        operation: "delete",
+      }),
+      {
+        pending: "Removing task from the list...",
+        success: "Task removed from the list!",
+        error: "An error occur while removing the task!",
+      }
+    );
+  }
+
+  function undoCompletedTask() {
+    toast.promise(
+      mutateTask({
+        index,
+        tasks,
+        operation: "update",
+        newTask: { ...task, isCompleted: false },
+      }),
+      {
+        pending: "Updating task...",
+        success: "Set as uncompleted!",
+        error: "An error occur while updating task!",
+      }
+    );
   }
 
   return (
     <ListItem
       sx={{
+        p: 1,
         alignItems: "flex-start",
         borderRadius: 0.5,
         ".MuiIconButton-root": {
@@ -77,7 +110,11 @@ function TaskItem({ task, index, tasks }: PropsType) {
       }}
     >
       <Tooltip title="Not Completed">
-        <Checkbox sx={{ mr: [2, 3] }} />
+        <Checkbox
+          onClick={undoCompletedTask}
+          sx={{ mr: [2, 3] }}
+          defaultChecked={task.isCompleted}
+        />
       </Tooltip>
 
       <ListItemText>
@@ -101,10 +138,7 @@ function TaskItem({ task, index, tasks }: PropsType) {
             InputProps={{
               endAdornment: (
                 <Tooltip title="Save">
-                  <IconButton
-                    onClick={handleSaveComment}
-                    sx={{ display: openComment ? "flex" : "none" }}
-                  >
+                  <IconButton onClick={handleSaveComment}>
                     <CheckIcon />
                   </IconButton>
                 </Tooltip>

@@ -18,9 +18,8 @@ import { FiEdit as EditIcon } from "react-icons/fi";
 import { MdDeleteOutline as DeleteIcon } from "react-icons/md";
 import { useThemeToggler } from "../../../contexts/ThemeToggler";
 import { toast } from "react-toastify";
-import useTasks, { useMutateTasks } from "../../../hooks/useTasks";
+import { useMutateTasks } from "../../../hooks/useTasks";
 import { User } from "firebase/auth";
-import updateTaskToServer from "../../../api/updateTask";
 import {
   RefetchOptions,
   RefetchQueryFilters,
@@ -39,14 +38,7 @@ type PropsType = {
   ) => Promise<QueryObserverResult<TaskType[], unknown>>;
 };
 
-function TaskItem({
-  task,
-  tasks,
-  openUpdateTaskModal,
-  index,
-  user,
-  refetch,
-}: PropsType) {
+function TaskItem({ task, tasks, openUpdateTaskModal, index }: PropsType) {
   const [currentTask, setCurrentTask] = useState<{
     index: number;
     task: TaskType;
@@ -80,7 +72,22 @@ function TaskItem({
 
   function handleCompleted() {
     const updatedTask: TaskType = { ...task, isCompleted: true };
-    // setTimeout(() => updateTask(index, updatedTask), 350);
+    toast.promise(
+      mutateTask({
+        tasks: tasks,
+        index,
+        newTask: updatedTask,
+        operation: "update",
+      }),
+      {
+        pending: "Adding to completed list...",
+        success: "Task Completed!",
+        error: "An error while completing task",
+      },
+      {
+        autoClose: 3000,
+      }
+    );
   }
 
   function handleDeleteTask() {
@@ -107,6 +114,7 @@ function TaskItem({
       <ListItem
         onClick={() => setEnableEdit(true)}
         sx={{
+          p: 1,
           borderRadius: 0.5,
           ":hover": {
             bgcolor: mode === "dark" ? colors.grey[900] : colors.grey[100],
@@ -121,7 +129,7 @@ function TaskItem({
           <Checkbox onChange={handleCompleted} sx={{ mr: 2, mb: "auto" }} />
         </Tooltip>
         <Stack>
-          <Typography sx={{ fontSize: 18 }}>{task.title}</Typography>
+          <Typography sx={{ fontSize: 16 }}>{task.title}</Typography>
         </Stack>
         <IconButton
           sx={{ ml: "auto", visibility: "hidden" }}

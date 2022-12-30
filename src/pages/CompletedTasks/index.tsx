@@ -11,6 +11,7 @@ function CompletedTasks() {
       <Paper
         sx={({ shadows }) => ({
           p: [1, 2],
+          my: [2, 3],
           boxShadow: ["none", shadows[5], shadows[10]],
         })}
       >

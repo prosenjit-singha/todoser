@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -16,15 +16,9 @@ import { HiPlus } from "react-icons/hi";
 import TaskType from "../../types/task.type";
 import { useTasks } from "../../contexts/TasksProvider";
 import { toast } from "react-toastify";
-
-// const initialDefaultTask: TaskType = {
-//   title: "",
-//   details: "",
-//   labels: [],
-//   images: [],
-//   comment: "",
-//   isCompleted: false,
-// };
+import { useMutateTasks } from "../../hooks/useTasks";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../contexts/AuthContext";
 
 type PropsType = {
   open: boolean;
@@ -33,8 +27,12 @@ type PropsType = {
 };
 
 function EditModal({ open, onClose, data }: PropsType) {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const uid = (user && user.uid) || "";
+  const tasks: TaskType[] = queryClient.getQueryData(["tasks", uid]) || [];
   const [task, setTask] = useState<TaskType>(data.task);
-  const { updateTask } = useTasks();
+  const { mutateAsync: mutateTask } = useMutateTasks();
   const addLabelRef = useRef<null | HTMLInputElement>(null);
   const titleRef = useRef<null | HTMLInputElement>(null);
   const detailsRef = useRef<null | HTMLInputElement>(null);
@@ -49,6 +47,7 @@ function EditModal({ open, onClose, data }: PropsType) {
     if (addLabelRef.current) {
       const newLabel = addLabelRef.current?.value;
       setTask((prev) => ({ ...prev, labels: addLabel(newLabel, prev.labels) }));
+      addLabelRef.current.value = "";
     }
   }
   function removeLabel(text: string) {
@@ -62,17 +61,20 @@ function EditModal({ open, onClose, data }: PropsType) {
     if (titleRef.current && detailsRef.current && addLabelRef.current) {
       const title = titleRef.current.value;
       const details = detailsRef.current.value;
-      const label = addLabelRef.current.value;
-      updateTask(data.index, {
-        ...task,
-        title,
-        details,
-      });
+      toast.promise(
+        mutateTask({
+          index: data.index,
+          tasks,
+          newTask: { ...task, title, details },
+          operation: "update",
+        }),
+        {
+          pending: "Updating task",
+          success: "Task updated!",
+          error: "An occur while updating!",
+        }
+      );
       onClose();
-      toast.success("Task Updated!", {
-        position: "top-center",
-        autoClose: 3000,
-      });
     }
   }
 
@@ -106,6 +108,7 @@ function EditModal({ open, onClose, data }: PropsType) {
             }}
           >
             <TextField
+              required
               inputRef={addLabelRef}
               name="addLabel"
               size="small"
@@ -114,7 +117,7 @@ function EditModal({ open, onClose, data }: PropsType) {
                 sx: { borderRadius: 3 },
                 endAdornment: (
                   <Tooltip title="Add" describeChild>
-                    <IconButton onClick={handleAddLabel} edge="end">
+                    <IconButton type="submit" edge="end">
                       <HiPlus />
                     </IconButton>
                   </Tooltip>

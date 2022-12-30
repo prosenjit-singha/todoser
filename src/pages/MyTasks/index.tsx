@@ -30,7 +30,7 @@ function MyTasks() {
       <Paper
         sx={({ shadows }) => ({
           my: [2, 3],
-          p: 1,
+          p: 2,
           boxShadow: ["none", shadows[5], shadows[10]],
         })}
       >
