@@ -106,10 +106,8 @@ function AddForm() {
     };
 
     mutate({
-      uid: (user && user.uid) || "",
       newTask,
       tasks: data,
-      index: 0,
       operation: "add",
     });
 

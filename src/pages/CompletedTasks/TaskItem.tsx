@@ -23,10 +23,11 @@ import { useMutateTasks } from "../../hooks/useTasks";
 
 type PropsType = {
   task: TaskType;
+  tasks: TaskType[];
   index: number;
 };
 
-function TaskItem({ task, index }: PropsType) {
+function TaskItem({ task, index, tasks }: PropsType) {
   const { updateTask, deleteTask } = useTasks();
   const { mode, theme } = useThemeToggler();
   const [openComment, setOpenComment] = useState(false);
@@ -47,9 +48,11 @@ function TaskItem({ task, index }: PropsType) {
 
   function handleDeleteClick() {
     deleteTask(index);
-    // mutateTask({
-    //   uid: user && user.uid
-    // })
+    mutateTask({
+      tasks,
+      index,
+      operation: "delete",
+    });
     toast.success("Task deleted!");
   }
 

@@ -21,7 +21,9 @@ function CompletedTasks() {
           {/* <TaskItem /> */}
           {tasks.map(
             (task, i) =>
-              task.isCompleted && <TaskItem index={i} task={task} key={i} />
+              task.isCompleted && (
+                <TaskItem index={i} task={task} key={i} tasks={tasks} />
+              )
           )}
         </List>
       </Paper>
