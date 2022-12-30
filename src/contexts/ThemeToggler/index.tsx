@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createContext, useContext } from "react";
-import { Theme } from "@mui/material";
+import { Theme, useMediaQuery } from "@mui/material";
 import { darkMode, lightMode } from "./theme";
 
 type PropsType = {
@@ -20,7 +20,10 @@ const ThemeTogglerContext = createContext<ValueType>({
 });
 
 export const ThemeTogglerProvider = ({ children }: PropsType) => {
-  const [mode, setMode] = useState<"dark" | "light">("dark");
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [mode, setMode] = useState<"dark" | "light">(
+    prefersDarkMode ? "dark" : "light"
+  );
 
   const theme = mode === "dark" ? darkMode : lightMode;
 
