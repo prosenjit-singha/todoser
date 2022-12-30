@@ -19,7 +19,7 @@ type ImageListProps = {
 function ImageList({ images, handleDelete }: ImageListProps) {
   return (
     <>
-      {!!images.length && <Typography>Images</Typography>}
+      <Typography>Images</Typography>
       <PhotoProvider>
         <List
           disablePadding
@@ -38,8 +38,9 @@ function ImageList({ images, handleDelete }: ImageListProps) {
                   outline: `1px solid ${palette.divider}`,
                 },
               })}
+              key={i}
             >
-              <PhotoView src={image.url} key={i}>
+              <PhotoView src={image.url}>
                 <Avatar
                   src={image.url}
                   sx={{ height: 30, width: 30, cursor: "pointer" }}

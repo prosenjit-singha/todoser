@@ -11,11 +11,7 @@ import {
   Chip,
   IconButton,
   Tooltip,
-  Typography,
-  Badge,
-  List,
-  ListItem,
-  Avatar,
+  CircularProgress,
 } from "@mui/material";
 import { HiPlus } from "react-icons/hi";
 import TaskType from "../../../types/task.type";
@@ -23,8 +19,9 @@ import { toast } from "react-toastify";
 import { useMutateTasks } from "../../../hooks/useTasks";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../../contexts/AuthContext";
-import { MdClose } from "react-icons/md";
+import { BiImageAdd } from "react-icons/bi";
 import ImageList from "./ImageList";
+import uploadImage from "../../../api/uploadImage";
 
 type PropsType = {
   open: boolean;
@@ -33,6 +30,7 @@ type PropsType = {
 };
 
 function EditModal({ open, onClose, data }: PropsType) {
+  const [uploading, setUploading] = useState(false);
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const uid = (user && user.uid) || "";
@@ -84,11 +82,30 @@ function EditModal({ open, onClose, data }: PropsType) {
     }
   }
 
-  async function removeImage(index: number) {
+  function removeImage(index: number) {
     setTask((prev) => ({
       ...prev,
       images: task.images.filter((_img, i) => i !== index),
     }));
+  }
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    try {
+      setUploading(true);
+      if (e.target.files && e.target.files[0]) {
+        const res = await uploadImage(e.target.files[0]);
+        setTask({ ...task, images: [...task.images, res] });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      e.target.value = "";
+
+      if (!/safari/i.test(navigator.userAgent)) {
+        e.target.type = "";
+        e.target.type = "file";
+      }
+      setUploading(false);
+    }
   }
 
   return (
@@ -149,7 +166,28 @@ function EditModal({ open, onClose, data }: PropsType) {
               />
             ))}
           </Stack>
-          <ImageList images={task.images} handleDelete={removeImage} />
+          <Tooltip title="Add image">
+            <IconButton
+              disabled={uploading}
+              component="label"
+              sx={{ width: "fit-content", height: "fit-content", mx: "auto" }}
+            >
+              {uploading ? (
+                <CircularProgress color="inherit" size="1em" />
+              ) : (
+                <BiImageAdd />
+              )}
+              <input
+                accept="image/*"
+                hidden
+                onChange={handleImageUpload}
+                type="file"
+              />
+            </IconButton>
+          </Tooltip>
+          {!!task.images.length && (
+            <ImageList images={task.images} handleDelete={removeImage} />
+          )}
         </Stack>
       </DialogContent>
 

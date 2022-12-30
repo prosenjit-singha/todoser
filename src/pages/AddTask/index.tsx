@@ -12,13 +12,11 @@ import { Main } from "../../components/styled";
 import TaskItem from "./TaskItem";
 import AddForm from "./AddForm";
 import useTasks from "../../hooks/useTasks";
-import Loading from "../../components/Loading";
 import { useRecentTasks } from "../../contexts/TasksProvider";
 
 function AddTask() {
-  const { data: tasks = [], isLoading } = useTasks();
+  const { data: tasks = [] } = useTasks();
   const { tasks: recentTasks } = useRecentTasks();
-  if (isLoading) return <Loading />;
   return (
     <Main sx={{ p: [0, 2, 3] }}>
       <Paper

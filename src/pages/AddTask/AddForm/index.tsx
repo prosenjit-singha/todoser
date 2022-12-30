@@ -204,7 +204,6 @@ function AddForm() {
                       <AddImageIcon />
                     )}
                     <input
-                      multiple
                       hidden
                       onChange={handleImageUpload}
                       accept="image/*"

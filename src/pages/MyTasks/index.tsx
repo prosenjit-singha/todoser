@@ -7,11 +7,13 @@ import TaskType from "../../types/task.type";
 import useTasks from "../../hooks/useTasks";
 import { useAuth } from "../../contexts/AuthContext";
 import TaskItemSkeleton from "./TaskItemSkeleton";
+import Oops from "./Oops";
 
 function MyTasks() {
   // const { tasks } = useTasks();
   const { user } = useAuth();
   const { data: tasks = [], isLoading } = useTasks();
+  const notCompletedTasks = tasks.filter((task) => !task.isCompleted);
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<{
     index: number;
     task: TaskType;
@@ -24,7 +26,7 @@ function MyTasks() {
   function handleTaskModalClose() {
     setTaskToBeUpdated(null);
   }
-
+  if (!isLoading && !notCompletedTasks.length) return <Oops />;
   return (
     <Main sx={{ p: [2, 3] }}>
       <Paper
@@ -44,19 +46,16 @@ function MyTasks() {
         <List>
           {isLoading &&
             [1, 2, 3, 4, 5].map((i) => <TaskItemSkeleton key={i} />)}
-          {tasks.map(
-            (task, i) =>
-              !task.isCompleted && (
-                <TaskItem
-                  user={user}
-                  openUpdateTaskModal={openUpdateTaskModal}
-                  task={task}
-                  key={i}
-                  index={i}
-                  tasks={tasks}
-                />
-              )
-          )}
+          {notCompletedTasks.map((task, i) => (
+            <TaskItem
+              user={user}
+              openUpdateTaskModal={openUpdateTaskModal}
+              task={task}
+              key={i}
+              index={i}
+              tasks={tasks}
+            />
+          ))}
         </List>
       </Paper>
       {taskToBeUpdated && (
