@@ -46,16 +46,19 @@ function MyTasks() {
         <List>
           {isLoading &&
             [1, 2, 3, 4, 5].map((i) => <TaskItemSkeleton key={i} />)}
-          {notCompletedTasks.map((task, i) => (
-            <TaskItem
-              user={user}
-              openUpdateTaskModal={openUpdateTaskModal}
-              task={task}
-              key={i}
-              index={i}
-              tasks={tasks}
-            />
-          ))}
+          {tasks.map(
+            (task, i) =>
+              !task.isCompleted && (
+                <TaskItem
+                  user={user}
+                  openUpdateTaskModal={openUpdateTaskModal}
+                  task={task}
+                  key={i}
+                  index={i}
+                  tasks={tasks}
+                />
+              )
+          )}
         </List>
       </Paper>
       {taskToBeUpdated && (
