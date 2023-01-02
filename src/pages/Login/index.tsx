@@ -17,7 +17,7 @@ function Login() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: ["calc(100vh - 56px)", "calc(100vh - 64px)"],
+          minHeight: ["calc(100vh - 54px)", "calc(100vh - 64px)"],
         }}
       >
         <RegForm />
@@ -27,10 +27,3 @@ function Login() {
 }
 
 export default Login;
-
-const Image = styled("img")`
-  max-width: 300px;
-  height: clamp(200px, 80vh, 500px);
-  object-fit: cover;
-  object-position: center;
-`;

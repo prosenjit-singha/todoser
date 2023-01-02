@@ -15,8 +15,16 @@ function Home() {
   if (user && user.uid) return <Navigate to="/add-task" replace />;
 
   return (
-    <Main sx={{ p: [2, 3] }}>
-      <Stack sx={{ minHeight: "calc(100vh - 56px)" }}>
+    <Main
+      sx={{
+        p: [2, 3],
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Stack>
         <Logo src={logo} alt="Logo" />
         <Typography
           variant="h2"

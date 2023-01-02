@@ -212,6 +212,7 @@ function AddForm() {
                   </IconButton>
                 </Tooltip>
                 <Button
+                  type="submit"
                   disabled={isUploading || isAdding}
                   variant="outlined"
                   size="small"

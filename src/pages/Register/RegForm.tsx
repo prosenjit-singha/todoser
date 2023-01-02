@@ -9,6 +9,7 @@ import {
   InputAdornment,
   IconButton,
   CircularProgress,
+  lighten,
 } from "@mui/material";
 import {
   MdOutlineVisibility as VisibilityIcon,
@@ -82,13 +83,14 @@ function RegForm() {
     <Paper
       component="form"
       onSubmit={handleSubmit}
-      elevation={3}
-      sx={({ shadows }) => ({
+      elevation={0}
+      sx={({ shadows, palette }) => ({
         p: 2,
         pb: 3,
         m: [0, 2, 3],
         minWidth: "min(100%, 350px)",
-        boxShadow: ["none", shadows[5]],
+        bgcolor: ["transparent", lighten(palette.background.paper, 0.035)],
+        boxShadow: ["none", shadows[5], shadows[10]],
       })}
     >
       <Typography component="h1" variant="h4" textAlign="center" gutterBottom>

@@ -1,4 +1,4 @@
-import { Grid, styled, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { Navigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import { Main } from "../../components/styled";
@@ -26,10 +26,3 @@ function Register() {
 }
 
 export default Register;
-
-const Image = styled("img")`
-  max-width: 300px;
-  height: clamp(200px, 80vh, 500px);
-  object-fit: cover;
-  object-position: center;
-`;

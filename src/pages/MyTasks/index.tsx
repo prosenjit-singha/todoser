@@ -28,12 +28,12 @@ function MyTasks() {
   }
   if (!isLoading && !notCompletedTasks.length) return <Oops />;
   return (
-    <Main sx={{ p: [2, 3] }}>
+    <Main sx={{ p: [0, 2, 3] }}>
       <Paper
         elevation={0}
         sx={({ shadows, palette }) => ({
+          p: [1, 2, 3],
           my: [2, 3],
-          p: 2,
           boxShadow: ["none", shadows[5], shadows[10]],
           bgcolor: ["transparent", lighten(palette.background.paper, 0.035)],
         })}
