@@ -111,7 +111,10 @@ function Navbar() {
         <IconButton
           onClick={toggleOpenMenu}
           sx={{
-            display: { md: "none" },
+            display: {
+              xs: !loading && !user?.uid ? "none" : "flex",
+              md: "none",
+            },
           }}
         >
           <MenuIcon />
